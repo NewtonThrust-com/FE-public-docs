@@ -1,0 +1,1596 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login Step1",
+                "operationId": "login_step1_login_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login effettuato",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenziali errate",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "detail": "Username o password errata"
+                                }
+                            }
+                        }
+                    },
+                    "423": {
+                        "description": "Password change required",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "detail": "Password change required"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Errore interno del server",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "detail": "Errore interno del server"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login/verify": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login Step2 Verify",
+                "operationId": "login_step2_verify_login_verify_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginOtpVerifyIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register",
+                "operationId": "register_register_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreateSchema"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOutSchema"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vehicles": {
+            "get": {
+                "tags": [
+                    "vehicles"
+                ],
+                "summary": "List Vehicles",
+                "operationId": "list_vehicles_vehicles_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/VehicleSchema"
+                                    },
+                                    "type": "array",
+                                    "title": "Response List Vehicles Vehicles Get",
+                                    "example": [
+                                        {
+                                            "id": "1",
+                                            "brand": "Pagani",
+                                            "model": "Utopia",
+                                            "b2c_price": 500000,
+                                            "fuel_type": "Petrol",
+                                            "transmission": "Automatic",
+                                            "type": "Sportiva",
+                                            "category": "Categoria A",
+                                            "registration_date": "2019-12-15",
+                                            "mileage": 10000
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "vehicles"
+                ],
+                "summary": "Create Vehicle",
+                "operationId": "create_vehicle_vehicles_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VehicleCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VehicleSchema"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vehicles/{vehicle_id}/images": {
+            "get": {
+                "tags": [
+                    "vehicles"
+                ],
+                "summary": "List Vehicle Images",
+                "operationId": "list_vehicle_images_vehicles__vehicle_id__images_get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Vehicle Id"
+                        },
+                        "name": "vehicle_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/VehicleImageOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response List Vehicle Images Vehicles  Vehicle Id  Images Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "vehicles"
+                ],
+                "summary": "Upload Vehicle Images",
+                "operationId": "upload_vehicle_images_vehicles__vehicle_id__images_post",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Vehicle Id"
+                        },
+                        "name": "vehicle_id",
+                        "in": "path"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_upload_vehicle_images_vehicles__vehicle_id__images_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/VehicleImageOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Upload Vehicle Images Vehicles  Vehicle Id  Images Post"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vehicles/images/{image_id}": {
+            "delete": {
+                "tags": [
+                    "vehicles"
+                ],
+                "summary": "Delete Vehicle Image",
+                "operationId": "delete_vehicle_image_vehicles_images__image_id__delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Image Id"
+                        },
+                        "name": "image_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orders": {
+            "post": {
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Create a new order",
+                "description": "Creates a new order including tickets, email, extras, and vehicle information.",
+                "operationId": "createOrder",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "tickets": {
+                                        "type": "object",
+                                        "properties": {
+                                            "quantity": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 99.9
+                                            },
+                                            "id": {
+                                                "type": "string",
+                                                "example": "123"
+                                            }
+                                        },
+                                        "required": [
+                                            "quantity",
+                                            "amount",
+                                            "id"
+                                        ]
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "200@Mail.com"
+                                    },
+                                    "extras": {
+                                        "type": "object",
+                                        "description": "Se c'è il full kit li mandiamo tutti",
+                                        "properties": {
+                                            "ids": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "example": [
+                                                    "1",
+                                                    "4",
+                                                    "7"
+                                                ]
+                                            },
+                                            "amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 150
+                                            }
+                                        },
+                                        "required": [
+                                            "ids",
+                                            "amount"
+                                        ]
+                                    },
+                                    "vehicle": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "example": "1"
+                                            }
+                                        },
+                                        "required": [
+                                            "id"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "tickets",
+                                    "email",
+                                    "extras",
+                                    "vehicle"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Order created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "orderId"
+                                    ],
+                                    "properties": {
+                                        "orderId": {
+                                            "type": "string",
+                                            "example": "ORD-98765"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "confirmed"
+                                        },
+                                        "totalAmount": {
+                                            "type": "number",
+                                            "example": 249.9
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/dealers": {
+            "post": {
+                "tags": [
+                    "dealers"
+                ],
+                "summary": "Create Dealer",
+                "operationId": "create_dealer_dealers_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DealerCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DealerResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/payments/create-checkout-session": {
+            "post": {
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Create Stripe checkout session",
+                "operationId": "createCheckoutSession",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "orderId"
+                                ],
+                                "properties": {
+                                    "orderId": {
+                                        "type": "string",
+                                        "example": "ORD-98765"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Checkout session created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "clientSecret",
+                                        "returnUrl"
+                                    ],
+                                    "properties": {
+                                        "clientSecret": {
+                                            "type": "string",
+                                            "example": "xyz"
+                                        },
+                                        "returnUrl": {
+                                            "type": "string",
+                                            "example": "https://yourdomain.com/payment/return?session_id=cs_test_a1b2c3d4"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/payments/session-status": {
+            "get": {
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Get session payment status",
+                "parameters": [
+                    {
+                        "name": "session_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Stripe Checkout session ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Session status retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "status",
+                                        "customerEmail"
+                                    ],
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "complete",
+                                            "description": "Payment status: 'open' or 'complete'",
+                                            "enum": [
+                                                "open",
+                                                "complete"
+                                            ]
+                                        },
+                                        "customerEmail": {
+                                            "type": "string",
+                                            "example": "customer@example.com"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/payments/intents": {
+            "post": {
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Create Payment Intent",
+                "operationId": "create_payment_intent_payments_intents_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreatePaymentIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreatePaymentOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/payments/webhook": {
+            "post": {
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Stripe Webhook",
+                "operationId": "stripe_webhook_payments_webhook_post",
+                "parameters": [
+                    {
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "title": "Stripe-Signature"
+                        },
+                        "name": "Stripe-Signature",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tickets": {
+            "get": {
+                "tags": [
+                    "tickets"
+                ],
+                "summary": "List Tickets",
+                "operationId": "list_tickets_tickets_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Ticket"
+                                    },
+                                    "title": "Response List Tickets Tickets Get"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "summary": "Example ticket list",
+                                        "value": [
+                                            {
+                                                "label": "Gold",
+                                                "price": 129.99
+                                            },
+                                            {
+                                                "label": "Silver",
+                                                "price": 99.99
+                                            },
+                                            {
+                                                "label": "Bronze",
+                                                "price": 79.99
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/extras": {
+            "get": {
+                "tags": [
+                    "campaign"
+                ],
+                "summary": "List Extras",
+                "operationId": "list_extras_extras_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Extras"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BodyType": {
+                "type": "string",
+                "enum": [
+                    "Berlina",
+                    "Coupe",
+                    "Cabriolet",
+                    "Suv",
+                    "StationWagon",
+                    "Roadster",
+                    "Crossover",
+                    "Minivan",
+                    "Pickup",
+                    "Van",
+                    "SUVCoupe",
+                    "Hatchback",
+                    "PickupDoubleCab",
+                    "Fastback",
+                    "ShootingBrake"
+                ],
+                "title": "BodyType",
+                "description": "An enumeration."
+            },
+            "Body_upload_vehicle_images_vehicles__vehicle_id__images_post": {
+                "properties": {
+                    "files": {
+                        "items": {
+                            "type": "string",
+                            "format": "binary"
+                        },
+                        "type": "array",
+                        "title": "Files"
+                    },
+                    "photo_type": {
+                        "$ref": "#/components/schemas/PhotoType"
+                    },
+                    "sort_start": {
+                        "type": "integer",
+                        "title": "Sort Start",
+                        "default": 0
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "files",
+                    "photo_type"
+                ],
+                "title": "Body_upload_vehicle_images_vehicles__vehicle_id__images_post"
+            },
+            "Category": {
+                "type": "string",
+                "enum": [
+                    "Generalist",
+                    "Specialist"
+                ],
+                "title": "Category",
+                "description": "An enumeration."
+            },
+            "CreatePaymentIn": {
+                "properties": {
+                    "currency": {
+                        "type": "string",
+                        "title": "Currency",
+                        "default": "eur"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "metadata": {
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "type": "object",
+                        "title": "Metadata"
+                    }
+                },
+                "type": "object",
+                "title": "CreatePaymentIn"
+            },
+            "CreatePaymentOut": {
+                "properties": {
+                    "client_secret": {
+                        "type": "string",
+                        "title": "Client Secret"
+                    },
+                    "payment_intent_id": {
+                        "type": "string",
+                        "title": "Payment Intent Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "client_secret",
+                    "payment_intent_id"
+                ],
+                "title": "CreatePaymentOut"
+            },
+            "DealerCreate": {
+                "properties": {
+                    "company_name": {
+                        "type": "string",
+                        "title": "Company Name"
+                    },
+                    "contact_person": {
+                        "type": "string",
+                        "title": "Contact Person"
+                    },
+                    "phone_number": {
+                        "type": "string",
+                        "title": "Phone Number"
+                    },
+                    "nationality": {
+                        "$ref": "#/components/schemas/Nationality"
+                    },
+                    "category": {
+                        "$ref": "#/components/schemas/Category"
+                    },
+                    "subcategory": {
+                        "$ref": "#/components/schemas/Subcategory"
+                    },
+                    "has_community_access": {
+                        "type": "boolean",
+                        "title": "Has Community Access",
+                        "default": false
+                    },
+                    "vehicle_quantity": {
+                        "type": "integer",
+                        "title": "Vehicle Quantity",
+                        "default": 0
+                    },
+                    "allows_intracommunity_operations": {
+                        "type": "boolean",
+                        "title": "Allows Intracommunity Operations",
+                        "default": false
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "company_name",
+                    "contact_person",
+                    "phone_number",
+                    "nationality",
+                    "category",
+                    "subcategory"
+                ],
+                "title": "DealerCreate"
+            },
+            "DealerResponse": {
+                "properties": {
+                    "company_name": {
+                        "type": "string",
+                        "title": "Company Name"
+                    },
+                    "contact_person": {
+                        "type": "string",
+                        "title": "Contact Person"
+                    },
+                    "phone_number": {
+                        "type": "string",
+                        "title": "Phone Number"
+                    },
+                    "nationality": {
+                        "$ref": "#/components/schemas/Nationality"
+                    },
+                    "category": {
+                        "$ref": "#/components/schemas/Category"
+                    },
+                    "subcategory": {
+                        "$ref": "#/components/schemas/Subcategory"
+                    },
+                    "has_community_access": {
+                        "type": "boolean",
+                        "title": "Has Community Access",
+                        "default": false
+                    },
+                    "vehicle_quantity": {
+                        "type": "integer",
+                        "title": "Vehicle Quantity",
+                        "default": 0
+                    },
+                    "allows_intracommunity_operations": {
+                        "type": "boolean",
+                        "title": "Allows Intracommunity Operations",
+                        "default": false
+                    },
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "company_name",
+                    "contact_person",
+                    "phone_number",
+                    "nationality",
+                    "category",
+                    "subcategory",
+                    "id"
+                ],
+                "title": "DealerResponse"
+            },
+            "Extras": {
+                "title": "Extras",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "label": {
+                        "type": "string",
+                        "example": "Pacchetto Lusso"
+                    },
+                    "ticket_id": {
+                        "type": "string",
+                        "example": "Gold"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 199.99
+                    },
+                    "excludeOthers": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                },
+                "required": [
+                    "id",
+                    "label",
+                    "ticket_id",
+                    "price",
+                    "excludeOthers"
+                ]
+            },
+            "FuelType": {
+                "type": "string",
+                "enum": [
+                    "Petrol",
+                    "Diesel",
+                    "LPG",
+                    "CNG",
+                    "Ethanol",
+                    "Biodiesel",
+                    "Electric",
+                    "PHEV",
+                    "HEV"
+                ],
+                "title": "FuelType",
+                "description": "An enumeration."
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "LoginIn": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "title": "LoginIn"
+            },
+            "LoginOtpVerifyIn": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "otp": {
+                        "type": "string",
+                        "title": "Otp"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "otp"
+                ],
+                "title": "LoginOtpVerifyIn"
+            },
+            "Nationality": {
+                "type": "string",
+                "enum": [
+                    "Italy",
+                    "Germany",
+                    "France",
+                    "Spain",
+                    "Netherlands",
+                    "Belgium",
+                    "Austria",
+                    "Switzerland",
+                    "Poland",
+                    "Czechia",
+                    "Hungary",
+                    "Slovakia",
+                    "Slovenia",
+                    "Croatia",
+                    "Romania",
+                    "Bulgaria",
+                    "Greece",
+                    "Portugal",
+                    "Denmark",
+                    "Sweden",
+                    "Norway",
+                    "Finland",
+                    "Estonia",
+                    "Latvia",
+                    "Lithuania",
+                    "Ireland",
+                    "Luxembourg",
+                    "Malta",
+                    "Cyprus",
+                    "Albania",
+                    "Andorra",
+                    "Belarus",
+                    "BosniaAndHerzegovina",
+                    "Iceland",
+                    "Kosovo",
+                    "Liechtenstein",
+                    "Moldova",
+                    "Monaco",
+                    "Montenegro",
+                    "NorthMacedonia",
+                    "Russia",
+                    "SanMarino",
+                    "Serbia",
+                    "Turkey",
+                    "Ukraine",
+                    "VaticanCity"
+                ],
+                "title": "Nationality",
+                "description": "An enumeration."
+            },
+            "PhotoType": {
+                "type": "string",
+                "enum": [
+                    "Exterior",
+                    "Interior",
+                    "Engine",
+                    "Dashboard",
+                    "Trunk",
+                    "Wheels",
+                    "Other"
+                ],
+                "title": "PhotoType",
+                "description": "An enumeration."
+            },
+            "RequesterType": {
+                "type": "string",
+                "enum": [
+                    "OurCompany",
+                    "OtherCompany",
+                    "Private"
+                ],
+                "title": "RequesterType",
+                "description": "An enumeration."
+            },
+            "Subcategory": {
+                "type": "string",
+                "enum": [
+                    "HypercarUltraLuxury",
+                    "SupercarLuxury",
+                    "PremiumPerformance",
+                    "EntryQuality"
+                ],
+                "title": "Subcategory",
+                "description": "An enumeration."
+            },
+            "TokenResponse": {
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "title": "Access Token"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "title": "Token Type",
+                        "default": "bearer"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "access_token"
+                ],
+                "title": "TokenResponse"
+            },
+            "TransmissionType": {
+                "type": "string",
+                "enum": [
+                    "Manual",
+                    "Automatic",
+                    "SemiAutomatic",
+                    "Cvt",
+                    "DualClutch",
+                    "ShiftByWire",
+                    "Amt",
+                    "Electric",
+                    "Etc",
+                    "FrictionPlate"
+                ],
+                "title": "TransmissionType",
+                "description": "An enumeration."
+            },
+            "UserCreateSchema": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    },
+                    "email": {
+                        "type": "string",
+                        "title": "Email"
+                    },
+                    "user_code": {
+                        "type": "string",
+                        "title": "User Code"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "password",
+                    "email",
+                    "user_code"
+                ],
+                "title": "UserCreateSchema"
+            },
+            "UserOutSchema": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "user_code": {
+                        "type": "string",
+                        "title": "User Code"
+                    },
+                    "creation_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Creation Date"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "username",
+                    "user_code"
+                ],
+                "title": "UserOutSchema"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            },
+            "VatRegimeType": {
+                "type": "string",
+                "enum": [
+                    "VatExposed",
+                    "VatMargin",
+                    "Exempt"
+                ],
+                "title": "VatRegimeType",
+                "description": "An enumeration."
+            },
+            "VehicleCreate": {
+                "properties": {
+                    "brand": {
+                        "type": "string",
+                        "title": "Brand"
+                    },
+                    "model": {
+                        "type": "string",
+                        "title": "Model"
+                    },
+                    "registration_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Registration Date"
+                    },
+                    "mileage": {
+                        "type": "integer",
+                        "title": "Mileage"
+                    },
+                    "color": {
+                        "type": "string",
+                        "title": "Color"
+                    },
+                    "power": {
+                        "type": "integer",
+                        "title": "Power"
+                    },
+                    "dealer_id": {
+                        "type": "string",
+                        "title": "Dealer Id"
+                    },
+                    "vehicle_type": {
+                        "$ref": "#/components/schemas/VehicleType"
+                    },
+                    "fuel_type": {
+                        "$ref": "#/components/schemas/FuelType"
+                    },
+                    "body_type": {
+                        "$ref": "#/components/schemas/BodyType"
+                    },
+                    "transmission": {
+                        "$ref": "#/components/schemas/TransmissionType"
+                    },
+                    "requester": {
+                        "$ref": "#/components/schemas/RequesterType"
+                    },
+                    "vat_regime": {
+                        "$ref": "#/components/schemas/VatRegimeType"
+                    },
+                    "b2c_margin_range_min": {
+                        "type": "number",
+                        "title": "B2C Margin Range Min"
+                    },
+                    "b2c_margin_range_max": {
+                        "type": "number",
+                        "title": "B2C Margin Range Max"
+                    },
+                    "b2b_price": {
+                        "type": "number",
+                        "title": "B2B Price"
+                    },
+                    "b2c_price": {
+                        "type": "number",
+                        "title": "B2C Price"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "brand",
+                    "model",
+                    "registration_date",
+                    "mileage",
+                    "color",
+                    "power",
+                    "dealer_id",
+                    "vehicle_type",
+                    "fuel_type",
+                    "body_type",
+                    "transmission",
+                    "requester",
+                    "vat_regime",
+                    "b2c_margin_range_min",
+                    "b2c_margin_range_max",
+                    "b2b_price",
+                    "b2c_price"
+                ],
+                "title": "VehicleCreate"
+            },
+            "VehicleImageOut": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "url": {
+                        "type": "string",
+                        "title": "Url"
+                    },
+                    "photo_type": {
+                        "$ref": "#/components/schemas/PhotoType"
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "title": "Sort Order"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "url",
+                    "photo_type",
+                    "sort_order"
+                ],
+                "title": "VehicleImageOut"
+            },
+            "VehicleSchema": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "category": {
+                        "type": "string",
+                        "title": "Category Filter"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Type Filter"
+                    },
+                    "brand": {
+                        "type": "string",
+                        "title": "Brand"
+                    },
+                    "model": {
+                        "type": "string",
+                        "title": "Model"
+                    },
+                    "registration_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Registration Date"
+                    },
+                    "mileage": {
+                        "type": "integer",
+                        "title": "Mileage"
+                    },
+                    "color": {
+                        "type": "string",
+                        "title": "Color"
+                    },
+                    "power": {
+                        "type": "integer",
+                        "title": "Power"
+                    },
+                    "dealer_id": {
+                        "type": "string",
+                        "title": "Dealer Id"
+                    },
+                    "vehicle_type": {
+                        "$ref": "#/components/schemas/VehicleType"
+                    },
+                    "fuel_type": {
+                        "$ref": "#/components/schemas/FuelType"
+                    },
+                    "body_type": {
+                        "$ref": "#/components/schemas/BodyType"
+                    },
+                    "transmission": {
+                        "$ref": "#/components/schemas/TransmissionType"
+                    },
+                    "requester": {
+                        "$ref": "#/components/schemas/RequesterType"
+                    },
+                    "vat_regime": {
+                        "$ref": "#/components/schemas/VatRegimeType"
+                    },
+                    "b2c_margin_range_min": {
+                        "type": "number",
+                        "title": "B2C Margin Range Min"
+                    },
+                    "b2c_margin_range_max": {
+                        "type": "number",
+                        "title": "B2C Margin Range Max"
+                    },
+                    "b2b_price": {
+                        "type": "number",
+                        "title": "B2B Price"
+                    },
+                    "b2c_price": {
+                        "type": "number",
+                        "title": "B2C Price"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "category",
+                    "type",
+                    "brand",
+                    "model",
+                    "registration_date",
+                    "mileage",
+                    "color",
+                    "power",
+                    "dealer_id",
+                    "vehicle_type",
+                    "fuel_type",
+                    "body_type",
+                    "transmission",
+                    "requester",
+                    "vat_regime",
+                    "b2c_margin_range_min",
+                    "b2c_margin_range_max",
+                    "b2b_price",
+                    "b2c_price"
+                ],
+                "title": "VehicleSchema"
+            },
+            "VehicleType": {
+                "type": "string",
+                "enum": [
+                    "Utility",
+                    "Premium",
+                    "Supercar",
+                    "Hypercar"
+                ],
+                "title": "VehicleType",
+                "description": "An enumeration."
+            },
+            "Ticket": {
+                "type": "object",
+                "title": "Ticket",
+                "required": [
+                    "id",
+                    "label",
+                    "price"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id",
+                        "example": "123"
+                    },
+                    "label": {
+                        "type": "string",
+                        "title": "Label",
+                        "example": "Gold"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "title": "Price",
+                        "minimum": 0,
+                        "example": 129.99
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "HTTPBearer": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
