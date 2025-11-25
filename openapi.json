@@ -24,12 +24,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Login effettuato",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
+                        "$ref": "#/components/responses/TokenResponse"
                     },
                     "401": {
                         "description": "Credenziali errate",
@@ -142,6 +137,84 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/change-password": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Change user password",
+                "description": "Allows a user to change password by providing the current password.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@example.com"
+                                    },
+                                    "current-password": {
+                                        "type": "string",
+                                        "example": "OldPassword123!"
+                                    },
+                                    "new-password": {
+                                        "type": "string",
+                                        "example": "NewPassword456!"
+                                    }
+                                },
+                                "required": [
+                                    "email",
+                                    "current-password",
+                                    "new-password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/TokenResponse"
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Username o password errata"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "423": {
+                        "description": "Password change required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Password change required"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
                     }
                 }
             }
@@ -804,6 +877,18 @@
         }
     },
     "components": {
+        "responses": {
+            "TokenResponse": {
+                "description": "Successful login or password-change response",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/TokenResponse"
+                        }
+                    }
+                }
+            }
+        },
         "schemas": {
             "BodyType": {
                 "type": "string",
