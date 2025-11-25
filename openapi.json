@@ -155,7 +155,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "email": {
+                                    "username": {
                                         "type": "string",
                                         "example": "user@example.com"
                                     },
@@ -169,7 +169,7 @@
                                     }
                                 },
                                 "required": [
-                                    "email",
+                                    "username",
                                     "current-password",
                                     "new-password"
                                 ]
