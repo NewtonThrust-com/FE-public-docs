@@ -159,19 +159,19 @@
                                         "type": "string",
                                         "example": "user@example.com"
                                     },
-                                    "current-password": {
+                                    "currentPassword": {
                                         "type": "string",
                                         "example": "OldPassword123!"
                                     },
-                                    "new-password": {
+                                    "newPassword": {
                                         "type": "string",
                                         "example": "NewPassword456!"
                                     }
                                 },
                                 "required": [
                                     "username",
-                                    "current-password",
-                                    "new-password"
+                                    "currentPassword",
+                                    "newPassword"
                                 ]
                             }
                         }
