@@ -256,45 +256,6 @@
                         }
                     }
                 }
-            },
-            "post": {
-                "tags": [
-                    "vehicles"
-                ],
-                "summary": "Create Vehicle",
-                "operationId": "create_vehicle_vehicles_post",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/VehicleCreate"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/VehicleSchema"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                }
             }
         },
         "/vehicles/{vehicle_id}/images": {
@@ -341,98 +302,9 @@
                         }
                     }
                 }
-            },
-            "post": {
-                "tags": [
-                    "vehicles"
-                ],
-                "summary": "Upload Vehicle Images",
-                "operationId": "upload_vehicle_images_vehicles__vehicle_id__images_post",
-                "parameters": [
-                    {
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "title": "Vehicle Id"
-                        },
-                        "name": "vehicle_id",
-                        "in": "path"
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Body_upload_vehicle_images_vehicles__vehicle_id__images_post"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "items": {
-                                        "$ref": "#/components/schemas/VehicleImageOut"
-                                    },
-                                    "type": "array",
-                                    "title": "Response Upload Vehicle Images Vehicles  Vehicle Id  Images Post"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                }
             }
         },
-        "/vehicles/images/{image_id}": {
-            "delete": {
-                "tags": [
-                    "vehicles"
-                ],
-                "summary": "Delete Vehicle Image",
-                "operationId": "delete_vehicle_image_vehicles_images__image_id__delete",
-                "parameters": [
-                    {
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "title": "Image Id"
-                        },
-                        "name": "image_id",
-                        "in": "path"
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Successful Response"
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/orders": {
+        "/orders/create": {
             "post": {
                 "tags": [
                     "orders"
@@ -532,18 +404,17 @@
                                 "schema": {
                                     "type": "object",
                                     "required": [
-                                        "orderId"
+                                        "order_id"
                                     ],
                                     "properties": {
-                                        "orderId": {
-                                            "type": "string",
-                                            "example": "ORD-98765"
+                                        "order_id": {
+                                            "$ref": "#/components/schemas/order_id"
                                         },
                                         "status": {
                                             "type": "string",
                                             "example": "confirmed"
                                         },
-                                        "totalAmount": {
+                                        "total_amount": {
                                             "type": "number",
                                             "example": 249.9
                                         }
@@ -621,12 +492,11 @@
                             "schema": {
                                 "type": "object",
                                 "required": [
-                                    "orderId"
+                                    "order_id"
                                 ],
                                 "properties": {
-                                    "orderId": {
-                                        "type": "string",
-                                        "example": "ORD-98765"
+                                    "order_id": {
+                                        "$ref": "#/components/schemas/order_id"
                                     }
                                 }
                             }
@@ -666,7 +536,7 @@
                 "tags": [
                     "payments"
                 ],
-                "summary": "Get session payment status",
+                "summary": "Get payment session status",
                 "parameters": [
                     {
                         "name": "session_id",
@@ -687,7 +557,7 @@
                                     "type": "object",
                                     "required": [
                                         "status",
-                                        "customerEmail"
+                                        "customer_email"
                                     ],
                                     "properties": {
                                         "status": {
@@ -699,97 +569,11 @@
                                                 "complete"
                                             ]
                                         },
-                                        "customerEmail": {
+                                        "customer_email": {
                                             "type": "string",
                                             "example": "customer@example.com"
                                         }
                                     }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/payments/intents": {
-            "post": {
-                "tags": [
-                    "payments"
-                ],
-                "summary": "Create Payment Intent",
-                "operationId": "create_payment_intent_payments_intents_post",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CreatePaymentIn"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CreatePaymentOut"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "HTTPBearer": []
-                    }
-                ]
-            }
-        },
-        "/payments/webhook": {
-            "post": {
-                "tags": [
-                    "payments"
-                ],
-                "summary": "Stripe Webhook",
-                "operationId": "stripe_webhook_payments_webhook_post",
-                "parameters": [
-                    {
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "title": "Stripe-Signature"
-                        },
-                        "name": "Stripe-Signature",
-                        "in": "header"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
                                 }
                             }
                         }
@@ -1104,7 +888,7 @@
                         "type": "string",
                         "example": "Pacchetto Lusso"
                     },
-                    "ticket_id": {
+                    "ticket_type_id": {
                         "type": "string",
                         "example": "Gold"
                     },
@@ -1121,7 +905,7 @@
                 "required": [
                     "id",
                     "label",
-                    "ticket_id",
+                    "ticket_type_id",
                     "price",
                     "excludeOthers"
                 ]
@@ -1257,6 +1041,10 @@
                 ],
                 "title": "PhotoType",
                 "description": "An enumeration."
+            },
+            "order_id": {
+                "type": "string",
+                "example": "ORD-98765"
             },
             "RequesterType": {
                 "type": "string",
