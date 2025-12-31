@@ -1,1469 +1,1154 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-        "title": "FastAPI",
-        "version": "0.1.0"
-    },
-    "paths": {
-        "/login": {
-            "post": {
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Login Step1",
-                "operationId": "login_step1_login_post",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LoginIn"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/TokenResponse"
-                    },
-                    "401": {
-                        "description": "Credenziali errate",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "detail": "Username o password errata"
-                                }
-                            }
-                        }
-                    },
-                    "423": {
-                        "description": "Password change required",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "detail": "Password change required"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Errore interno del server",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "detail": "Errore interno del server"
-                                }
-                            }
-                        }
-                    }
-                }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FastAPI",
+    "version": "0.1.0",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://157.180.75.191:8000",
+      "description": "Dev"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login Step1",
+        "operationId": "login_step1_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginIn"
+              }
             }
+          },
+          "required": true
         },
-        "/login/verify": {
-            "post": {
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Login Step2 Verify",
-                "operationId": "login_step2_verify_login_verify_post",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LoginOtpVerifyIn"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/TokenResponse"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/register": {
-            "post": {
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Register",
-                "operationId": "register_register_post",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserCreateSchema"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserOutSchema"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/change-password": {
-            "post": {
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Change user password",
-                "description": "Allows a user to change password by providing the current password.",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "username": {
-                                        "type": "string",
-                                        "example": "user@example.com"
-                                    },
-                                    "currentPassword": {
-                                        "type": "string",
-                                        "example": "OldPassword123!"
-                                    },
-                                    "newPassword": {
-                                        "type": "string",
-                                        "example": "NewPassword456!"
-                                    }
-                                },
-                                "required": [
-                                    "username",
-                                    "currentPassword",
-                                    "newPassword"
-                                ]
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/TokenResponse"
-                    },
-                    "401": {
-                        "description": "Invalid credentials",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "Username o password errata"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "423": {
-                        "description": "Password change required",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "Password change required"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Server error"
-                    }
-                }
-            }
-        },
-        "/vehicles": {
-            "get": {
-                "tags": [
-                    "vehicles"
-                ],
-                "summary": "List Vehicles",
-                "operationId": "list_vehicles_vehicles_get",
-                "responses": {
-                    "200": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "items": {
-                                        "$ref": "#/components/schemas/VehicleSchema"
-                                    },
-                                    "type": "array",
-                                    "title": "Response List Vehicles Vehicles Get",
-                                    "example": [
-                                        {
-                                            "id": "1",
-                                            "brand": "Pagani",
-                                            "model": "Utopia",
-                                            "b2c_price": 500000,
-                                            "fuel_type": "Petrol",
-                                            "transmission": "Automatic",
-                                            "type": "Sportiva",
-                                            "category": "Categoria A",
-                                            "registration_date": "2019-12-15",
-                                            "mileage": 10000
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/vehicles/{vehicle_id}/images": {
-            "get": {
-                "tags": [
-                    "vehicles"
-                ],
-                "summary": "List Vehicle Images",
-                "operationId": "list_vehicle_images_vehicles__vehicle_id__images_get",
-                "parameters": [
-                    {
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "title": "Vehicle Id"
-                        },
-                        "name": "vehicle_id",
-                        "in": "path"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "items": {
-                                        "$ref": "#/components/schemas/VehicleImageOut"
-                                    },
-                                    "type": "array",
-                                    "title": "Response List Vehicle Images Vehicles  Vehicle Id  Images Get"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/orders/create": {
-            "post": {
-                "tags": [
-                    "orders"
-                ],
-                "summary": "Create a new order",
-                "description": "Creates a new order including tickets, email, extras, and vehicle information.",
-                "operationId": "createOrder",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "tickets": {
-                                        "type": "object",
-                                        "properties": {
-                                            "quantity": {
-                                                "type": "integer",
-                                                "example": 1
-                                            },
-                                            "amount": {
-                                                "type": "number",
-                                                "format": "float",
-                                                "example": 99.9
-                                            },
-                                            "id": {
-                                                "type": "string",
-                                                "example": "123"
-                                            }
-                                        },
-                                        "required": [
-                                            "quantity",
-                                            "amount",
-                                            "id"
-                                        ]
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "200@Mail.com"
-                                    },
-                                    "extras": {
-                                        "type": "object",
-                                        "description": "Se c'è il full kit li mandiamo tutti",
-                                        "properties": {
-                                            "ids": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "string"
-                                                },
-                                                "example": [
-                                                    "1",
-                                                    "4",
-                                                    "7"
-                                                ]
-                                            },
-                                            "amount": {
-                                                "type": "number",
-                                                "format": "float",
-                                                "example": 150
-                                            }
-                                        },
-                                        "required": [
-                                            "ids",
-                                            "amount"
-                                        ]
-                                    },
-                                    "vehicle": {
-                                        "type": "object",
-                                        "properties": {
-                                            "id": {
-                                                "type": "string",
-                                                "example": "1"
-                                            }
-                                        },
-                                        "required": [
-                                            "id"
-                                        ]
-                                    }
-                                },
-                                "required": [
-                                    "tickets",
-                                    "email",
-                                    "extras",
-                                    "vehicle"
-                                ]
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Order created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "order_id"
-                                    ],
-                                    "properties": {
-                                        "order_id": {
-                                            "$ref": "#/components/schemas/order_id"
-                                        },
-                                        "status": {
-                                            "type": "string",
-                                            "example": "confirmed"
-                                        },
-                                        "total_amount": {
-                                            "type": "number",
-                                            "example": 249.9
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request body"
-                    },
-                    "500": {
-                        "description": "Internal server error"
-                    }
-                }
-            }
-        },
-        "/dealers": {
-            "post": {
-                "tags": [
-                    "dealers"
-                ],
-                "summary": "Create Dealer",
-                "operationId": "create_dealer_dealers_post",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/DealerCreate"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DealerResponse"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "HTTPBearer": []
-                    }
-                ]
-            }
-        },
-        "/payments/create-checkout-session": {
-            "post": {
-                "tags": [
-                    "payments"
-                ],
-                "summary": "Create Stripe checkout session",
-                "operationId": "createCheckoutSession",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": [
-                                    "order_id"
-                                ],
-                                "properties": {
-                                    "order_id": {
-                                        "$ref": "#/components/schemas/order_id"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Checkout session created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "clientSecret",
-                                        "returnUrl"
-                                    ],
-                                    "properties": {
-                                        "clientSecret": {
-                                            "type": "string",
-                                            "example": "xyz"
-                                        },
-                                        "returnUrl": {
-                                            "type": "string",
-                                            "example": "https://yourdomain.com/payment/return?session_id=cs_test_a1b2c3d4"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/payments/session-status": {
-            "get": {
-                "tags": [
-                    "payments"
-                ],
-                "summary": "Get payment session status",
-                "parameters": [
-                    {
-                        "name": "session_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": "Stripe Checkout session ID"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Session status retrieved successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "status",
-                                        "customer_email"
-                                    ],
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "complete",
-                                            "description": "Payment status: 'open' or 'complete'",
-                                            "enum": [
-                                                "open",
-                                                "complete"
-                                            ]
-                                        },
-                                        "customer_email": {
-                                            "type": "string",
-                                            "example": "customer@example.com"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/tickets": {
-            "get": {
-                "tags": [
-                    "tickets"
-                ],
-                "summary": "List Tickets",
-                "operationId": "list_tickets_tickets_get",
-                "responses": {
-                    "200": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Ticket"
-                                    },
-                                    "title": "Response List Tickets Tickets Get"
-                                },
-                                "examples": {
-                                    "success": {
-                                        "summary": "Example ticket list",
-                                        "value": [
-                                            {
-                                                "label": "Gold",
-                                                "price": 129.99
-                                            },
-                                            {
-                                                "label": "Silver",
-                                                "price": 99.99
-                                            },
-                                            {
-                                                "label": "Bronze",
-                                                "price": 79.99
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/extras": {
-            "get": {
-                "tags": [
-                    "campaign"
-                ],
-                "summary": "List Extras",
-                "operationId": "list_extras_extras_get",
-                "responses": {
-                    "200": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Extras"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "components": {
         "responses": {
-            "TokenResponse": {
-                "description": "Successful login or password-change response",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/TokenResponse"
-                        }
-                    }
+          "200": {
+            "$ref": "#/components/responses/TokenResponse"
+          },
+          "401": {
+            "description": "Credenziali errate",
+            "content": {
+              "application/json": {
+                "example": {
+                  "detail": "Username o password errata"
                 }
+              }
             }
+          },
+          "423": {
+            "description": "Password change required",
+            "content": {
+              "application/json": {
+                "example": {
+                  "detail": "Password change required"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "content": {
+              "application/json": {
+                "example": {
+                  "detail": "Errore interno del server"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login/verify": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login Step2 Verify",
+        "operationId": "login_step2_verify_login_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginOtpVerifyIn"
+              }
+            }
+          },
+          "required": true
         },
-        "schemas": {
-            "BodyType": {
-                "type": "string",
-                "enum": [
-                    "Berlina",
-                    "Coupe",
-                    "Cabriolet",
-                    "Suv",
-                    "StationWagon",
-                    "Roadster",
-                    "Crossover",
-                    "Minivan",
-                    "Pickup",
-                    "Van",
-                    "SUVCoupe",
-                    "Hatchback",
-                    "PickupDoubleCab",
-                    "Fastback",
-                    "ShootingBrake"
-                ],
-                "title": "BodyType",
-                "description": "An enumeration."
-            },
-            "Body_upload_vehicle_images_vehicles__vehicle_id__images_post": {
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Register",
+        "operationId": "register_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOutSchema"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/change-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Change user password",
+        "description": "Allows a user to change password by providing the current password.",
+        "operationId": "changePassword",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
                 "properties": {
-                    "files": {
-                        "items": {
-                            "type": "string",
-                            "format": "binary"
-                        },
+                  "username": {
+                    "type": "string",
+                    "example": "user@example.com"
+                  },
+                  "currentPassword": {
+                    "type": "string",
+                    "example": "OldPassword123!"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "example": "NewPassword456!"
+                  }
+                },
+                "required": [
+                  "username",
+                  "currentPassword",
+                  "newPassword"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TokenResponse"
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "Username o password errata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "423": {
+            "description": "Password change required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "Password change required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/pgna/register": {
+      "post": {
+        "tags": [
+          "pgna"
+        ],
+        "summary": "PGNA Signup",
+        "description": "Registrazione utente PGNA",
+        "operationId": "pgnaSignup",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PgnaSignupIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Signup completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PgnaSignupOut"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/vehicles": {
+      "get": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "List Vehicles",
+        "operationId": "list_vehicles_vehicles_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/VehicleSchema"
+                  },
+                  "type": "array",
+                  "title": "Response List Vehicles Vehicles Get",
+                  "example": [
+                    {
+                      "id": "1",
+                      "brand": "Pagani",
+                      "model": "Utopia",
+                      "b2c_price": 500000,
+                      "fuel_type": "Petrol",
+                      "transmission": "Automatic",
+                      "type": "Sportiva",
+                      "category": "Categoria A",
+                      "registration_date": "2019-12-15",
+                      "mileage": 10000
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vehicles/{vehicle_id}/images": {
+      "get": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "List Vehicle Images",
+        "operationId": "list_vehicle_images_vehicles__vehicle_id__images_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Vehicle Id"
+            },
+            "name": "vehicle_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/VehicleImageOut"
+                  },
+                  "type": "array",
+                  "title": "Response List Vehicle Images Vehicles  Vehicle Id  Images Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/create": {
+      "post": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Create a new order",
+        "description": "Creates a new order including tickets, email, extras, and vehicle information.",
+        "operationId": "createOrder",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tickets": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 99.9
+                      },
+                      "id": {
+                        "type": "string",
+                        "example": "123"
+                      }
+                    },
+                    "required": [
+                      "quantity",
+                      "amount",
+                      "id"
+                    ]
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "200@Mail.com"
+                  },
+                  "extras": {
+                    "type": "object",
+                    "description": "Se c'è il full kit li mandiamo tutti",
+                    "properties": {
+                      "ids": {
                         "type": "array",
-                        "title": "Files"
-                    },
-                    "photo_type": {
-                        "$ref": "#/components/schemas/PhotoType"
-                    },
-                    "sort_start": {
-                        "type": "integer",
-                        "title": "Sort Start",
-                        "default": 0
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "files",
-                    "photo_type"
-                ],
-                "title": "Body_upload_vehicle_images_vehicles__vehicle_id__images_post"
-            },
-            "Category": {
-                "type": "string",
-                "enum": [
-                    "Generalist",
-                    "Specialist"
-                ],
-                "title": "Category",
-                "description": "An enumeration."
-            },
-            "CreatePaymentIn": {
-                "properties": {
-                    "currency": {
-                        "type": "string",
-                        "title": "Currency",
-                        "default": "eur"
-                    },
-                    "description": {
-                        "type": "string",
-                        "title": "Description"
-                    },
-                    "metadata": {
-                        "additionalProperties": {
-                            "type": "string"
+                        "items": {
+                          "type": "string"
                         },
-                        "type": "object",
-                        "title": "Metadata"
-                    }
-                },
-                "type": "object",
-                "title": "CreatePaymentIn"
-            },
-            "CreatePaymentOut": {
-                "properties": {
-                    "client_secret": {
-                        "type": "string",
-                        "title": "Client Secret"
+                        "example": [
+                          "1",
+                          "4",
+                          "7"
+                        ]
+                      },
+                      "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 150
+                      }
                     },
-                    "payment_intent_id": {
-                        "type": "string",
-                        "title": "Payment Intent Id"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "client_secret",
-                    "payment_intent_id"
-                ],
-                "title": "CreatePaymentOut"
-            },
-            "DealerCreate": {
-                "properties": {
-                    "company_name": {
-                        "type": "string",
-                        "title": "Company Name"
-                    },
-                    "contact_person": {
-                        "type": "string",
-                        "title": "Contact Person"
-                    },
-                    "phone_number": {
-                        "type": "string",
-                        "title": "Phone Number"
-                    },
-                    "nationality": {
-                        "$ref": "#/components/schemas/Nationality"
-                    },
-                    "category": {
-                        "$ref": "#/components/schemas/Category"
-                    },
-                    "subcategory": {
-                        "$ref": "#/components/schemas/Subcategory"
-                    },
-                    "has_community_access": {
-                        "type": "boolean",
-                        "title": "Has Community Access",
-                        "default": false
-                    },
-                    "vehicle_quantity": {
-                        "type": "integer",
-                        "title": "Vehicle Quantity",
-                        "default": 0
-                    },
-                    "allows_intracommunity_operations": {
-                        "type": "boolean",
-                        "title": "Allows Intracommunity Operations",
-                        "default": false
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "company_name",
-                    "contact_person",
-                    "phone_number",
-                    "nationality",
-                    "category",
-                    "subcategory"
-                ],
-                "title": "DealerCreate"
-            },
-            "DealerResponse": {
-                "properties": {
-                    "company_name": {
-                        "type": "string",
-                        "title": "Company Name"
-                    },
-                    "contact_person": {
-                        "type": "string",
-                        "title": "Contact Person"
-                    },
-                    "phone_number": {
-                        "type": "string",
-                        "title": "Phone Number"
-                    },
-                    "nationality": {
-                        "$ref": "#/components/schemas/Nationality"
-                    },
-                    "category": {
-                        "$ref": "#/components/schemas/Category"
-                    },
-                    "subcategory": {
-                        "$ref": "#/components/schemas/Subcategory"
-                    },
-                    "has_community_access": {
-                        "type": "boolean",
-                        "title": "Has Community Access",
-                        "default": false
-                    },
-                    "vehicle_quantity": {
-                        "type": "integer",
-                        "title": "Vehicle Quantity",
-                        "default": 0
-                    },
-                    "allows_intracommunity_operations": {
-                        "type": "boolean",
-                        "title": "Allows Intracommunity Operations",
-                        "default": false
-                    },
-                    "id": {
-                        "type": "string",
-                        "title": "Id"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "company_name",
-                    "contact_person",
-                    "phone_number",
-                    "nationality",
-                    "category",
-                    "subcategory",
-                    "id"
-                ],
-                "title": "DealerResponse"
-            },
-            "Extras": {
-                "title": "Extras",
-                "type": "object",
-                "properties": {
-                    "id": {
+                    "required": [
+                      "ids",
+                      "amount"
+                    ]
+                  },
+                  "vehicle": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
                         "type": "string",
                         "example": "1"
+                      }
                     },
-                    "label": {
-                        "type": "string",
-                        "example": "Pacchetto Lusso"
-                    },
-                    "ticket_type_id": {
-                        "type": "string",
-                        "example": "Gold"
-                    },
-                    "price": {
-                        "type": "number",
-                        "format": "float",
-                        "example": 199.99
-                    },
-                    "excludeOthers": {
-                        "type": "boolean",
-                        "example": false
-                    }
+                    "required": [
+                      "id"
+                    ]
+                  }
                 },
                 "required": [
-                    "id",
-                    "label",
-                    "ticket_type_id",
-                    "price",
-                    "excludeOthers"
+                  "tickets",
+                  "email",
+                  "extras",
+                  "vehicle"
                 ]
-            },
-            "FuelType": {
-                "type": "string",
-                "enum": [
-                    "Petrol",
-                    "Diesel",
-                    "LPG",
-                    "CNG",
-                    "Ethanol",
-                    "Biodiesel",
-                    "Electric",
-                    "PHEV",
-                    "HEV"
-                ],
-                "title": "FuelType",
-                "description": "An enumeration."
-            },
-            "HTTPValidationError": {
-                "properties": {
-                    "detail": {
-                        "items": {
-                            "$ref": "#/components/schemas/ValidationError"
-                        },
-                        "type": "array",
-                        "title": "Detail"
-                    }
-                },
-                "type": "object",
-                "title": "HTTPValidationError"
-            },
-            "LoginIn": {
-                "properties": {
-                    "username": {
-                        "type": "string",
-                        "title": "Username"
-                    },
-                    "password": {
-                        "type": "string",
-                        "title": "Password"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "username",
-                    "password"
-                ],
-                "title": "LoginIn"
-            },
-            "LoginOtpVerifyIn": {
-                "properties": {
-                    "username": {
-                        "type": "string",
-                        "title": "Username"
-                    },
-                    "otp": {
-                        "type": "string",
-                        "title": "Otp"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "username",
-                    "otp"
-                ],
-                "title": "LoginOtpVerifyIn"
-            },
-            "Nationality": {
-                "type": "string",
-                "enum": [
-                    "Italy",
-                    "Germany",
-                    "France",
-                    "Spain",
-                    "Netherlands",
-                    "Belgium",
-                    "Austria",
-                    "Switzerland",
-                    "Poland",
-                    "Czechia",
-                    "Hungary",
-                    "Slovakia",
-                    "Slovenia",
-                    "Croatia",
-                    "Romania",
-                    "Bulgaria",
-                    "Greece",
-                    "Portugal",
-                    "Denmark",
-                    "Sweden",
-                    "Norway",
-                    "Finland",
-                    "Estonia",
-                    "Latvia",
-                    "Lithuania",
-                    "Ireland",
-                    "Luxembourg",
-                    "Malta",
-                    "Cyprus",
-                    "Albania",
-                    "Andorra",
-                    "Belarus",
-                    "BosniaAndHerzegovina",
-                    "Iceland",
-                    "Kosovo",
-                    "Liechtenstein",
-                    "Moldova",
-                    "Monaco",
-                    "Montenegro",
-                    "NorthMacedonia",
-                    "Russia",
-                    "SanMarino",
-                    "Serbia",
-                    "Turkey",
-                    "Ukraine",
-                    "VaticanCity"
-                ],
-                "title": "Nationality",
-                "description": "An enumeration."
-            },
-            "PhotoType": {
-                "type": "string",
-                "enum": [
-                    "Exterior",
-                    "Interior",
-                    "Engine",
-                    "Dashboard",
-                    "Trunk",
-                    "Wheels",
-                    "Other"
-                ],
-                "title": "PhotoType",
-                "description": "An enumeration."
-            },
-            "order_id": {
-                "type": "string",
-                "example": "ORD-98765"
-            },
-            "RequesterType": {
-                "type": "string",
-                "enum": [
-                    "OurCompany",
-                    "OtherCompany",
-                    "Private"
-                ],
-                "title": "RequesterType",
-                "description": "An enumeration."
-            },
-            "Subcategory": {
-                "type": "string",
-                "enum": [
-                    "HypercarUltraLuxury",
-                    "SupercarLuxury",
-                    "PremiumPerformance",
-                    "EntryQuality"
-                ],
-                "title": "Subcategory",
-                "description": "An enumeration."
-            },
-            "TokenResponse": {
-                "properties": {
-                    "access_token": {
-                        "type": "string",
-                        "title": "Access Token"
-                    },
-                    "token_type": {
-                        "type": "string",
-                        "title": "Token Type",
-                        "default": "bearer"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "access_token"
-                ],
-                "title": "TokenResponse"
-            },
-            "TransmissionType": {
-                "type": "string",
-                "enum": [
-                    "Manual",
-                    "Automatic",
-                    "SemiAutomatic",
-                    "Cvt",
-                    "DualClutch",
-                    "ShiftByWire",
-                    "Amt",
-                    "Electric",
-                    "Etc",
-                    "FrictionPlate"
-                ],
-                "title": "TransmissionType",
-                "description": "An enumeration."
-            },
-            "UserCreateSchema": {
-                "properties": {
-                    "username": {
-                        "type": "string",
-                        "title": "Username"
-                    },
-                    "password": {
-                        "type": "string",
-                        "title": "Password"
-                    },
-                    "email": {
-                        "type": "string",
-                        "title": "Email"
-                    },
-                    "user_code": {
-                        "type": "string",
-                        "title": "User Code"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "username",
-                    "password",
-                    "email",
-                    "user_code"
-                ],
-                "title": "UserCreateSchema"
-            },
-            "UserOutSchema": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "title": "Id"
-                    },
-                    "username": {
-                        "type": "string",
-                        "title": "Username"
-                    },
-                    "user_code": {
-                        "type": "string",
-                        "title": "User Code"
-                    },
-                    "creation_date": {
-                        "type": "string",
-                        "format": "date-time",
-                        "title": "Creation Date"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "id",
-                    "username",
-                    "user_code"
-                ],
-                "title": "UserOutSchema"
-            },
-            "ValidationError": {
-                "properties": {
-                    "loc": {
-                        "items": {
-                            "anyOf": [
-                                {
-                                    "type": "string"
-                                },
-                                {
-                                    "type": "integer"
-                                }
-                            ]
-                        },
-                        "type": "array",
-                        "title": "Location"
-                    },
-                    "msg": {
-                        "type": "string",
-                        "title": "Message"
-                    },
-                    "type": {
-                        "type": "string",
-                        "title": "Error Type"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "loc",
-                    "msg",
-                    "type"
-                ],
-                "title": "ValidationError"
-            },
-            "VatRegimeType": {
-                "type": "string",
-                "enum": [
-                    "VatExposed",
-                    "VatMargin",
-                    "Exempt"
-                ],
-                "title": "VatRegimeType",
-                "description": "An enumeration."
-            },
-            "VehicleCreate": {
-                "properties": {
-                    "brand": {
-                        "type": "string",
-                        "title": "Brand"
-                    },
-                    "model": {
-                        "type": "string",
-                        "title": "Model"
-                    },
-                    "registration_date": {
-                        "type": "string",
-                        "format": "date",
-                        "title": "Registration Date"
-                    },
-                    "mileage": {
-                        "type": "integer",
-                        "title": "Mileage"
-                    },
-                    "color": {
-                        "type": "string",
-                        "title": "Color"
-                    },
-                    "power": {
-                        "type": "integer",
-                        "title": "Power"
-                    },
-                    "dealer_id": {
-                        "type": "string",
-                        "title": "Dealer Id"
-                    },
-                    "vehicle_type": {
-                        "$ref": "#/components/schemas/VehicleType"
-                    },
-                    "fuel_type": {
-                        "$ref": "#/components/schemas/FuelType"
-                    },
-                    "body_type": {
-                        "$ref": "#/components/schemas/BodyType"
-                    },
-                    "transmission": {
-                        "$ref": "#/components/schemas/TransmissionType"
-                    },
-                    "requester": {
-                        "$ref": "#/components/schemas/RequesterType"
-                    },
-                    "vat_regime": {
-                        "$ref": "#/components/schemas/VatRegimeType"
-                    },
-                    "b2c_margin_range_min": {
-                        "type": "number",
-                        "title": "B2C Margin Range Min"
-                    },
-                    "b2c_margin_range_max": {
-                        "type": "number",
-                        "title": "B2C Margin Range Max"
-                    },
-                    "b2b_price": {
-                        "type": "number",
-                        "title": "B2B Price"
-                    },
-                    "b2c_price": {
-                        "type": "number",
-                        "title": "B2C Price"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "brand",
-                    "model",
-                    "registration_date",
-                    "mileage",
-                    "color",
-                    "power",
-                    "dealer_id",
-                    "vehicle_type",
-                    "fuel_type",
-                    "body_type",
-                    "transmission",
-                    "requester",
-                    "vat_regime",
-                    "b2c_margin_range_min",
-                    "b2c_margin_range_max",
-                    "b2b_price",
-                    "b2c_price"
-                ],
-                "title": "VehicleCreate"
-            },
-            "VehicleImageOut": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "title": "Id"
-                    },
-                    "url": {
-                        "type": "string",
-                        "title": "Url"
-                    },
-                    "photo_type": {
-                        "$ref": "#/components/schemas/PhotoType"
-                    },
-                    "sort_order": {
-                        "type": "integer",
-                        "title": "Sort Order"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "id",
-                    "url",
-                    "photo_type",
-                    "sort_order"
-                ],
-                "title": "VehicleImageOut"
-            },
-            "VehicleSchema": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "title": "Id"
-                    },
-                    "category": {
-                        "type": "string",
-                        "title": "Category Filter"
-                    },
-                    "type": {
-                        "type": "string",
-                        "title": "Type Filter"
-                    },
-                    "brand": {
-                        "type": "string",
-                        "title": "Brand"
-                    },
-                    "model": {
-                        "type": "string",
-                        "title": "Model"
-                    },
-                    "registration_date": {
-                        "type": "string",
-                        "format": "date",
-                        "title": "Registration Date"
-                    },
-                    "mileage": {
-                        "type": "integer",
-                        "title": "Mileage"
-                    },
-                    "color": {
-                        "type": "string",
-                        "title": "Color"
-                    },
-                    "power": {
-                        "type": "integer",
-                        "title": "Power"
-                    },
-                    "dealer_id": {
-                        "type": "string",
-                        "title": "Dealer Id"
-                    },
-                    "vehicle_type": {
-                        "$ref": "#/components/schemas/VehicleType"
-                    },
-                    "fuel_type": {
-                        "$ref": "#/components/schemas/FuelType"
-                    },
-                    "body_type": {
-                        "$ref": "#/components/schemas/BodyType"
-                    },
-                    "transmission": {
-                        "$ref": "#/components/schemas/TransmissionType"
-                    },
-                    "requester": {
-                        "$ref": "#/components/schemas/RequesterType"
-                    },
-                    "vat_regime": {
-                        "$ref": "#/components/schemas/VatRegimeType"
-                    },
-                    "b2c_margin_range_min": {
-                        "type": "number",
-                        "title": "B2C Margin Range Min"
-                    },
-                    "b2c_margin_range_max": {
-                        "type": "number",
-                        "title": "B2C Margin Range Max"
-                    },
-                    "b2b_price": {
-                        "type": "number",
-                        "title": "B2B Price"
-                    },
-                    "b2c_price": {
-                        "type": "number",
-                        "title": "B2C Price"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "id",
-                    "category",
-                    "type",
-                    "brand",
-                    "model",
-                    "registration_date",
-                    "mileage",
-                    "color",
-                    "power",
-                    "dealer_id",
-                    "vehicle_type",
-                    "fuel_type",
-                    "body_type",
-                    "transmission",
-                    "requester",
-                    "vat_regime",
-                    "b2c_margin_range_min",
-                    "b2c_margin_range_max",
-                    "b2b_price",
-                    "b2c_price"
-                ],
-                "title": "VehicleSchema"
-            },
-            "VehicleType": {
-                "type": "string",
-                "enum": [
-                    "Utility",
-                    "Premium",
-                    "Supercar",
-                    "Hypercar"
-                ],
-                "title": "VehicleType",
-                "description": "An enumeration."
-            },
-            "Ticket": {
-                "type": "object",
-                "title": "Ticket",
-                "required": [
-                    "id",
-                    "label",
-                    "price"
-                ],
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "title": "Id",
-                        "example": "123"
-                    },
-                    "label": {
-                        "type": "string",
-                        "title": "Label",
-                        "example": "Gold"
-                    },
-                    "price": {
-                        "type": "number",
-                        "format": "float",
-                        "title": "Price",
-                        "minimum": 0,
-                        "example": 129.99
-                    }
-                }
+              }
             }
+          }
         },
-        "securitySchemes": {
-            "HTTPBearer": {
-                "type": "http",
-                "scheme": "bearer"
+        "responses": {
+          "201": {
+            "description": "Order created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "order_id"
+                  ],
+                  "properties": {
+                    "order_id": {
+                      "$ref": "#/components/schemas/order_id"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "confirmed"
+                    },
+                    "total_amount": {
+                      "type": "number",
+                      "example": 249.9
+                    }
+                  }
+                }
+              }
             }
+          },
+          "400": {
+            "description": "Invalid request body"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
         }
+      }
+    },
+    "/payments/create-checkout-session": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Create Stripe checkout session",
+        "operationId": "createCheckoutSession",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "order_id"
+                ],
+                "properties": {
+                  "order_id": {
+                    "$ref": "#/components/schemas/order_id"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout session created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "clientSecret",
+                    "returnUrl"
+                  ],
+                  "properties": {
+                    "clientSecret": {
+                      "type": "string",
+                      "example": "xyz"
+                    },
+                    "returnUrl": {
+                      "type": "string",
+                      "example": "https://yourdomain.com/payment/return?session_id=cs_test_a1b2c3d4"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/session-status": {
+      "get": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Get payment session status",
+        "operationId": "getPaymentsSessionStatus",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Stripe Checkout session ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "customer_email"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "complete",
+                      "description": "Payment status: 'open' or 'complete'",
+                      "enum": [
+                        "open",
+                        "complete"
+                      ]
+                    },
+                    "customer_email": {
+                      "type": "string",
+                      "example": "customer@example.com"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tickets": {
+      "get": {
+        "tags": [
+          "tickets"
+        ],
+        "summary": "List Tickets",
+        "operationId": "list_tickets_tickets_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Ticket"
+                  },
+                  "title": "Response List Tickets Tickets Get"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Example ticket list",
+                    "value": [
+                      {
+                        "label": "Gold",
+                        "price": 129.99
+                      },
+                      {
+                        "label": "Silver",
+                        "price": 99.99
+                      },
+                      {
+                        "label": "Bronze",
+                        "price": 79.99
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/extras": {
+      "get": {
+        "tags": [
+          "campaign"
+        ],
+        "summary": "List Extras",
+        "operationId": "list_extras_extras_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Extras"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
+  },
+  "components": {
+    "responses": {
+      "TokenResponse": {
+        "description": "Successful login or password-change response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TokenResponse"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Extras": {
+        "title": "Extras",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "1"
+          },
+          "label": {
+            "type": "string",
+            "example": "Pacchetto Lusso"
+          },
+          "ticket_type_id": {
+            "type": "string",
+            "example": "Gold"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "example": 199.99
+          },
+          "excludeOthers": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "ticket_type_id",
+          "price",
+          "excludeOthers"
+        ]
+      },
+      "FuelType": {
+        "type": "string",
+        "enum": [
+          "Petrol",
+          "Diesel",
+          "LPG",
+          "CNG",
+          "Ethanol",
+          "Biodiesel",
+          "Electric",
+          "PHEV",
+          "HEV"
+        ],
+        "title": "FuelType",
+        "description": "An enumeration."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "LoginIn": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "LoginIn"
+      },
+      "LoginOtpVerifyIn": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "otp": {
+            "type": "string",
+            "title": "Otp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "otp"
+        ],
+        "title": "LoginOtpVerifyIn"
+      },
+      "PgnaSignupIn": {
+        "title": "PgnaSignupIn",
+        "type": "object",
+        "required": [
+          "email",
+          "fiscalCode",
+          "phoneNumber",
+          "idDocumentNumber",
+          "address"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "fiscalCode": {
+            "type": "string",
+            "example": "RSSMRA85M01H501Z"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+393331234567"
+          },
+          "idDocumentNumber": {
+            "type": "string",
+            "example": "CA1234567"
+          },
+          "address": {
+            "type": "string",
+            "example": "Via Roma 10, 00100 Roma (RM)"
+          }
+        }
+      },
+      "PgnaSignupOut": {
+        "title": "PgnaSignupOut",
+        "type": "object",
+        "required": [
+          "id",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "PGNA-00123"
+          },
+          "status": {
+            "type": "string",
+            "example": "registered"
+          }
+        }
+      },
+      "PhotoType": {
+        "type": "string",
+        "enum": [
+          "Exterior",
+          "Interior",
+          "Engine",
+          "Dashboard",
+          "Trunk",
+          "Wheels",
+          "Other"
+        ],
+        "title": "PhotoType",
+        "description": "An enumeration."
+      },
+      "order_id": {
+        "type": "string",
+        "example": "ORD-98765"
+      },
+      "RequesterType": {
+        "type": "string",
+        "enum": [
+          "OurCompany",
+          "OtherCompany",
+          "Private"
+        ],
+        "title": "RequesterType",
+        "description": "An enumeration."
+      },
+      "TokenResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token"
+        ],
+        "title": "TokenResponse"
+      },
+      "TransmissionType": {
+        "type": "string",
+        "enum": [
+          "Manual",
+          "Automatic",
+          "SemiAutomatic",
+          "Cvt",
+          "DualClutch",
+          "ShiftByWire",
+          "Amt",
+          "Electric",
+          "Etc",
+          "FrictionPlate"
+        ],
+        "title": "TransmissionType",
+        "description": "An enumeration."
+      },
+      "UserCreateSchema": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "user_code": {
+            "type": "string",
+            "title": "User Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password",
+          "email",
+          "user_code"
+        ],
+        "title": "UserCreateSchema"
+      },
+      "UserOutSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "user_code": {
+            "type": "string",
+            "title": "User Code"
+          },
+          "creation_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Creation Date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "username",
+          "user_code"
+        ],
+        "title": "UserOutSchema"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VatRegimeType": {
+        "type": "string",
+        "enum": [
+          "VatExposed",
+          "VatMargin",
+          "Exempt"
+        ],
+        "title": "VatRegimeType",
+        "description": "An enumeration."
+      },
+      "VehicleImageOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "photo_type": {
+            "$ref": "#/components/schemas/PhotoType"
+          },
+          "sort_order": {
+            "type": "integer",
+            "title": "Sort Order"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "url",
+          "photo_type",
+          "sort_order"
+        ],
+        "title": "VehicleImageOut"
+      },
+      "VehicleSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category Filter"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type Filter"
+          },
+          "brand": {
+            "type": "string",
+            "title": "Brand"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "registration_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Registration Date"
+          },
+          "mileage": {
+            "type": "integer",
+            "title": "Mileage"
+          },
+          "color": {
+            "type": "string",
+            "title": "Color"
+          },
+          "power": {
+            "type": "integer",
+            "title": "Power"
+          },
+          "dealer_id": {
+            "type": "string",
+            "title": "Dealer Id"
+          },
+          "fuel_type": {
+            "$ref": "#/components/schemas/FuelType"
+          },
+          "transmission": {
+            "$ref": "#/components/schemas/TransmissionType"
+          },
+          "requester": {
+            "$ref": "#/components/schemas/RequesterType"
+          },
+          "vat_regime": {
+            "$ref": "#/components/schemas/VatRegimeType"
+          },
+          "b2c_margin_range_min": {
+            "type": "number",
+            "title": "B2C Margin Range Min"
+          },
+          "b2c_margin_range_max": {
+            "type": "number",
+            "title": "B2C Margin Range Max"
+          },
+          "b2b_price": {
+            "type": "number",
+            "title": "B2B Price"
+          },
+          "b2c_price": {
+            "type": "number",
+            "title": "B2C Price"
+          }
+        },
+        "type": "object",
+        "required": [
+          "b2c_price",
+          "brand",
+          "category",
+          "fuel_type",
+          "id",
+          "mileage",
+          "model",
+          "registration_date",
+          "transmission",
+          "type"
+        ],
+        "title": "VehicleSchema"
+      },
+      "Ticket": {
+        "type": "object",
+        "title": "Ticket",
+        "required": [
+          "id",
+          "label",
+          "price"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "example": "123"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "example": "Gold"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "title": "Price",
+            "minimum": 0,
+            "example": 129.99
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
 }
