@@ -262,6 +262,16 @@
           "400": {
             "description": "Invalid request body"
           },
+          "409": {
+            "description": "Conflict Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPConflictError"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -737,6 +747,51 @@
         ],
         "title": "FuelType",
         "description": "An enumeration."
+      },
+      "HTTPConflictError": {
+        "title": "HTTPConflictError",
+        "type": "object",
+        "required": [
+          "status",
+          "error",
+          "message"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "const": 409,
+            "example": 409
+          },
+          "error": {
+            "type": "string",
+            "example": "EMAIL_ALREADY_REGISTERED",
+            "examples": [
+              "USERNAME_NOT_AVAILABLE",
+              "EMAIL_ALREADY_REGISTERED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "example": "An account with this email already exists.",
+            "examples": [
+              "This username is already taken.",
+              "An account with this email already exists."
+            ]
+          }
+        },
+        "examples": [
+          {
+            "status": 409,
+            "error": "USERNAME_NOT_AVAILABLE",
+            "message": "This username is already taken."
+          },
+          {
+            "status": 409,
+            "error": "EMAIL_ALREADY_REGISTERED",
+            "message": "An account with this email already exists."
+          }
+        ],
+        "additionalProperties": false
       },
       "HTTPValidationError": {
         "properties": {
