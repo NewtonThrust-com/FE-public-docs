@@ -110,18 +110,29 @@
         }
       }
     },
-    "/register": {
+    "/signup": {
       "post": {
         "tags": [
           "auth"
         ],
-        "summary": "Register",
-        "operationId": "register_register_post",
+        "summary": "Signup",
+        "description": "Registrazione per Persone Fisiche o Aziende (Business)",
+        "operationId": "signup",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserCreateSchema"
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PersonSignupIn"
+                  },
+                  {
+                    "$ref": "#/components/schemas/BusinessSignupIn"
+                  },
+                  {
+                    "$ref": "#/components/schemas/UserSignupIn"
+                  }
+                ]
               }
             }
           },
@@ -226,64 +237,6 @@
           },
           "500": {
             "description": "Server error"
-          }
-        }
-      }
-    },
-    "/pgna/register": {
-      "post": {
-        "tags": [
-          "pgna"
-        ],
-        "summary": "PGNA Signup",
-        "description": "Registrazione utente PGNA",
-        "operationId": "pgnaSignup",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PgnaSignupIn"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Signup completed successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PgnaSignupOut"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request body"
-          },
-          "409": {
-            "description": "Conflict Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPConflictError"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error"
           }
         }
       }
@@ -748,51 +701,6 @@
         "title": "FuelType",
         "description": "An enumeration."
       },
-      "HTTPConflictError": {
-        "title": "HTTPConflictError",
-        "type": "object",
-        "required": [
-          "status",
-          "error",
-          "message"
-        ],
-        "properties": {
-          "status": {
-            "type": "integer",
-            "const": 409,
-            "example": 409
-          },
-          "error": {
-            "type": "string",
-            "example": "EMAIL_ALREADY_REGISTERED",
-            "examples": [
-              "USERNAME_NOT_AVAILABLE",
-              "EMAIL_ALREADY_REGISTERED"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "example": "An account with this email already exists.",
-            "examples": [
-              "This username is already taken.",
-              "An account with this email already exists."
-            ]
-          }
-        },
-        "examples": [
-          {
-            "status": 409,
-            "error": "USERNAME_NOT_AVAILABLE",
-            "message": "This username is already taken."
-          },
-          {
-            "status": 409,
-            "error": "EMAIL_ALREADY_REGISTERED",
-            "message": "An account with this email already exists."
-          }
-        ],
-        "additionalProperties": false
-      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -841,73 +749,6 @@
           "otp"
         ],
         "title": "LoginOtpVerifyIn"
-      },
-      "PgnaSignupIn": {
-        "title": "PgnaSignupIn",
-        "type": "object",
-        "required": [
-          "address",
-          "birthCity",
-          "birthCountry",
-          "email",
-          "fiscalCode",
-          "fullName",
-          "idDocumentNumber",
-          "phoneNumber"
-        ],
-        "properties": {
-          "birthCity": {
-            "type": "string",
-            "example": "Milano"
-          },
-          "birthCountry": {
-            "type": "string",
-            "example": "Italia"
-          },
-          "fullName": {
-            "type": "string",
-            "example": "Mario Rossi"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "user@example.com"
-          },
-          "fiscalCode": {
-            "type": "string",
-            "example": "RSSMRA85M01H501Z"
-          },
-          "phoneNumber": {
-            "type": "string",
-            "example": "+393331234567"
-          },
-          "idDocumentNumber": {
-            "type": "string",
-            "example": "CA1234567"
-          },
-          "address": {
-            "type": "string",
-            "example": "Via Roma 10, 00100 Roma (RM)"
-          }
-        }
-      },
-      "PgnaSignupOut": {
-        "title": "PgnaSignupOut",
-        "type": "object",
-        "required": [
-          "id",
-          "status"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "example": "PGNA-00123"
-          },
-          "status": {
-            "type": "string",
-            "example": "registered"
-          }
-        }
       },
       "PhotoType": {
         "type": "string",
@@ -972,7 +813,7 @@
         "title": "TransmissionType",
         "description": "An enumeration."
       },
-      "UserCreateSchema": {
+      "UserSignupIn": {
         "properties": {
           "username": {
             "type": "string",
@@ -985,47 +826,24 @@
           "email": {
             "type": "string",
             "title": "Email"
-          },
-          "user_code": {
-            "type": "string",
-            "title": "User Code"
           }
         },
         "type": "object",
         "required": [
           "username",
           "password",
-          "email",
-          "user_code"
+          "email"
         ],
-        "title": "UserCreateSchema"
+        "title": "UserSignupIn"
       },
       "UserOutSchema": {
         "properties": {
-          "id": {
+          "message": {
             "type": "string",
-            "title": "Id"
-          },
-          "username": {
-            "type": "string",
-            "title": "Username"
-          },
-          "user_code": {
-            "type": "string",
-            "title": "User Code"
-          },
-          "creation_date": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Creation Date"
+            "example": "User created successfully"
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "username",
-          "user_code"
-        ],
         "title": "UserOutSchema"
       },
       "ValidationError": {
@@ -1210,6 +1028,102 @@
             "title": "Price",
             "minimum": 0,
             "example": 129.99
+          }
+        }
+      },
+      "PersonSignupIn": {
+        "type": "object",
+        "required": [
+          "type",
+          "fullName",
+          "email",
+          "phoneNumber",
+          "fiscalCode",
+          "idDocumentNumber",
+          "birthDate",
+          "birthCity",
+          "birthCountry",
+          "address"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "person"
+            ],
+            "default": "person"
+          },
+          "fullName": {
+            "type": "string",
+            "example": "Mario Rossi"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "fiscalCode": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "birthCity": {
+            "type": "string"
+          },
+          "birthCountry": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          }
+        }
+      },
+      "BusinessSignupIn": {
+        "type": "object",
+        "required": [
+          "type",
+          "businessName",
+          "registeredOffice",
+          "vatNumber",
+          "legalRepresentativeName",
+          "legalRepresentativeId",
+          "email",
+          "businessPhone"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "company"
+            ],
+            "default": "company"
+          },
+          "businessName": {
+            "type": "string",
+            "example": "Tech S.r.l."
+          },
+          "vatNumber": {
+            "type": "string"
+          },
+          "registeredOffice": {
+            "type": "string"
+          },
+          "legalRepresentativeName": {
+            "type": "string"
+          },
+          "legalRepresentativeId": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "businessPhone": {
+            "type": "string"
           }
         }
       }
