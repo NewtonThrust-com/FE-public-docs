@@ -1098,9 +1098,9 @@
           "type": {
             "type": "string",
             "enum": [
-              "company"
+              "business"
             ],
-            "default": "company"
+            "default": "business"
           },
           "businessName": {
             "type": "string",
