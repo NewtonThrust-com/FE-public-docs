@@ -635,6 +635,42 @@
           }
         }
       }
+    },
+    "/docs": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Get Document",
+        "description": "Retrieve a document (PDF) by its ID",
+        "operationId": "getDocument",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The document ID to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PDF document in base64 format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Document not found"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -836,14 +872,35 @@
         ],
         "title": "UserSignupIn"
       },
+      "DocumentResponse": {
+        "properties": {
+          "base64": {
+            "type": "string",
+            "description": "PDF document encoded in base64 format",
+            "example": "JVBERi0xLjQK..."
+          }
+        },
+        "type": "object",
+        "required": [
+          "base64"
+        ],
+        "title": "DocumentResponse"
+      },
       "UserOutSchema": {
         "properties": {
           "message": {
             "type": "string",
             "example": "User created successfully"
+          },
+          "signupSignatureDocId": {
+            "type": "string",
+            "example": "doc-12345"
           }
         },
         "type": "object",
+        "required": [
+          "signupSignatureDocId"
+        ],
         "title": "UserOutSchema"
       },
       "ValidationError": {
@@ -1047,7 +1104,7 @@
         ],
         "properties": {
           "type": {
-            "type": "string",
+            "$ref": "#/components/schemas/SignupType",
             "enum": [
               "person"
             ],
@@ -1096,7 +1153,7 @@
         ],
         "properties": {
           "type": {
-            "type": "string",
+            "$ref": "#/components/schemas/SignupType",
             "enum": [
               "business"
             ],
@@ -1126,6 +1183,14 @@
             "type": "string"
           }
         }
+      },
+      "SignupType": {
+        "type": "string",
+        "enum": [
+          "person",
+          "business"
+        ],
+        "title": "SignupType"
       }
     },
     "securitySchemes": {
