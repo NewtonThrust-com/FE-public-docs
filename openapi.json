@@ -69,6 +69,60 @@
         }
       }
     },
+    "/pgna/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Pgna Login",
+        "operationId": "pgna_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PgnaLoginIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TokenResponse"
+          },
+          "401": {
+            "description": "Credenziali errate",
+            "content": {
+              "application/json": {
+                "example": {
+                  "detail": "Username o password errata"
+                }
+              }
+            }
+          },
+          "423": {
+            "description": "Password change required",
+            "content": {
+              "application/json": {
+                "example": {
+                  "detail": "Password change required"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Errore interno del server",
+            "content": {
+              "application/json": {
+                "example": {
+                  "detail": "Errore interno del server"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/login/verify": {
       "post": {
         "tags": [
@@ -767,6 +821,24 @@
           "password"
         ],
         "title": "LoginIn"
+      },
+      "PgnaLoginIn": {
+        "properties": {
+          "refNT": {
+            "type": "string",
+            "title": "RefNT"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "refNT",
+          "password"
+        ],
+        "title": "PgnaLoginIn"
       },
       "LoginOtpVerifyIn": {
         "properties": {
