@@ -130,6 +130,11 @@
         ],
         "summary": "Login Step2 Verify",
         "operationId": "login_step2_verify_login_verify_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -853,7 +858,6 @@
         },
         "type": "object",
         "required": [
-          "username",
           "otp"
         ],
         "title": "LoginOtpVerifyIn"
@@ -964,14 +968,14 @@
             "type": "string",
             "example": "User created successfully"
           },
-          "signupSignatureDocId": {
+          "documentId": {
             "type": "string",
             "example": "doc-12345"
           }
         },
         "type": "object",
         "required": [
-          "signupSignatureDocId"
+          "documentId"
         ],
         "title": "UserOutSchema"
       },
@@ -1221,7 +1225,7 @@
           "legalRepresentativeName",
           "legalRepresentativeId",
           "email",
-          "businessPhone"
+          "businessPhoneNumber"
         ],
         "properties": {
           "type": {
@@ -1251,7 +1255,7 @@
             "type": "string",
             "format": "email"
           },
-          "businessPhone": {
+          "businessPhoneNumber": {
             "type": "string"
           }
         }
