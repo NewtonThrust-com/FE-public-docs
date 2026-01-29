@@ -695,7 +695,7 @@
         }
       }
     },
-    "/docs": {
+    "/pdf/generate/base64/{id}": {
       "get": {
         "tags": [
           "documents"
@@ -705,8 +705,8 @@
         "operationId": "getDocument",
         "parameters": [
           {
-            "name": "documentId",
-            "in": "query",
+            "name": "id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string"
