@@ -730,6 +730,60 @@
           }
         }
       }
+    },
+    "/docs/sign": {
+      "post": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Sign Document",
+        "description": "Sign a document with OTP verification",
+        "operationId": "signDocument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "otp"
+                ],
+                "properties": {
+                  "otp": {
+                    "type": "string",
+                    "description": "One-time password for document signing",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Document signed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Document signed successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid OTP"
+          },
+          "404": {
+            "description": "Document not found"
+          }
+        }
+      }
     }
   },
   "components": {
