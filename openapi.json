@@ -69,13 +69,13 @@
         }
       }
     },
-    "/pgna/login": {
+    "/login/refNT": {
       "post": {
         "tags": [
           "auth"
         ],
-        "summary": "Pgna Login",
-        "operationId": "pgna_login_post",
+        "summary": "Login RefNT",
+        "operationId": "login_refNT_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -695,7 +695,7 @@
         }
       }
     },
-    "/pdf/generate/base64/{id}": {
+    "/pdf/{id}": {
       "get": {
         "tags": [
           "documents"
@@ -746,13 +746,19 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "otp"
+                  "otp",
+                  "documentId"
                 ],
                 "properties": {
                   "otp": {
                     "type": "string",
                     "description": "One-time password for document signing",
                     "example": "123456"
+                  },
+                  "documentId": {
+                    "type": "string",
+                    "description": "The document ID to sign",
+                    "example": "123"
                   }
                 }
               }
