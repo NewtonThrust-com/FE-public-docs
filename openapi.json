@@ -130,11 +130,6 @@
         ],
         "summary": "Login Step2 Verify",
         "operationId": "login_step2_verify_login_verify_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -165,6 +160,25 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/otp": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Otp",
+        "operationId": "otp",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -203,7 +217,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserOutSchema"
+                  "$ref": "#/components/schemas/SignupResponse"
                 }
               }
             }
@@ -695,7 +709,7 @@
         }
       }
     },
-    "/pdf/{id}": {
+    "/docs/{id}": {
       "get": {
         "tags": [
           "documents"
@@ -703,6 +717,11 @@
         "summary": "Get Document",
         "description": "Retrieve a document (PDF) by its ID",
         "operationId": "getDocument",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -739,6 +758,11 @@
         "summary": "Sign Document",
         "description": "Sign a document with OTP verification",
         "operationId": "signDocument",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -747,6 +771,8 @@
                 "type": "object",
                 "required": [
                   "otp",
+                  "refNT",
+                  "password",
                   "documentId"
                 ],
                 "properties": {
@@ -754,6 +780,16 @@
                     "type": "string",
                     "description": "One-time password for document signing",
                     "example": "123456"
+                  },
+                  "refNT": {
+                    "type": "string",
+                    "description": "NewtonThrust reference code",
+                    "example": "NT123456"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "User password",
+                    "format": "password"
                   },
                   "documentId": {
                     "type": "string",
@@ -1022,22 +1058,29 @@
         ],
         "title": "DocumentResponse"
       },
-      "UserOutSchema": {
+      "SignupResponse": {
         "properties": {
-          "message": {
+          "access_token": {
             "type": "string",
-            "example": "User created successfully"
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
           },
           "documentId": {
             "type": "string",
+            "title": "Document ID",
             "example": "doc-12345"
           }
         },
         "type": "object",
         "required": [
+          "access_token",
           "documentId"
         ],
-        "title": "UserOutSchema"
+        "title": "SignupResponse"
       },
       "ValidationError": {
         "properties": {
