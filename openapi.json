@@ -2,6 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "FastAPI",
+    "description": "Newton Thrust API",
     "version": "0.1.0",
     "license": {
       "name": "MIT",
