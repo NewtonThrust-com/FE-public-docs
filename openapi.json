@@ -130,6 +130,11 @@
         ],
         "summary": "Login Step2 Verify",
         "operationId": "login_step2_verify_login_verify_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -709,6 +714,77 @@
         }
       }
     },
+    "/deals": {
+      "get": {
+        "tags": [
+          "deals"
+        ],
+        "summary": "List Deals",
+        "description": "Returns all deals for the authenticated user",
+        "operationId": "listDeals",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DealSchema"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "deals"
+        ],
+        "summary": "Create Deal",
+        "description": "Creates a new deal for a vehicle, returns a document to sign",
+        "operationId": "createDeal",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDealIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Deal created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDealResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/docs/{id}": {
       "get": {
         "tags": [
@@ -823,6 +899,150 @@
           },
           "404": {
             "description": "Document not found"
+          }
+        }
+      }
+    },
+    "/admin/registrations": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Admin Registrations",
+        "description": "Returns all registration requests for admin review",
+        "operationId": "listAdminRegistrations",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegistrationRequestSchema"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/admin/registrations/{id}/approve": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Approve Registration",
+        "description": "Approve a pending registration request",
+        "operationId": "approveRegistration",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The registration request ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registration approved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Registration approved"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registration not found"
+          }
+        }
+      }
+    },
+    "/admin/registrations/{id}/reject": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Reject Registration",
+        "description": "Reject a pending registration request with optional reason",
+        "operationId": "rejectRegistration",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The registration request ID"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "description": "Rejection reason text",
+                    "example": "Incomplete documentation"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registration rejected successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Registration rejected"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registration not found"
           }
         }
       }
@@ -996,6 +1216,10 @@
             "type": "string",
             "title": "Token Type",
             "default": "bearer"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
           }
         },
         "type": "object",
@@ -1057,6 +1281,77 @@
           "base64"
         ],
         "title": "DocumentResponse"
+      },
+      "CreateDealIn": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicle Id",
+            "example": "1"
+          }
+        },
+        "type": "object",
+        "required": [
+          "vehicleId"
+        ],
+        "title": "CreateDealIn"
+      },
+      "DealSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "example": "deal-1"
+          },
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicle Id",
+            "example": "1"
+          },
+          "documentId": {
+            "type": "string",
+            "title": "Document Id",
+            "example": "123"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "example": "pending",
+            "enum": [
+              "pending",
+              "signed",
+              "completed"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "vehicleId",
+          "documentId",
+          "status",
+          "createdAt"
+        ],
+        "title": "DealSchema"
+      },
+      "CreateDealResponse": {
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "title": "Document Id",
+            "example": "deal-doc-123"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documentId"
+        ],
+        "title": "CreateDealResponse"
       },
       "SignupResponse": {
         "properties": {
@@ -1222,6 +1517,10 @@
           "b2c_price": {
             "type": "number",
             "title": "B2C Price"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
           }
         },
         "type": "object",
@@ -1273,6 +1572,7 @@
           "type",
           "fullName",
           "email",
+          "password",
           "phoneNumber",
           "fiscalCode",
           "idDocumentNumber",
@@ -1296,6 +1596,10 @@
           "email": {
             "type": "string",
             "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
           },
           "phoneNumber": {
             "type": "string"
@@ -1328,6 +1632,7 @@
           "legalRepresentativeName",
           "legalRepresentativeId",
           "email",
+          "password",
           "businessPhoneNumber"
         ],
         "properties": {
@@ -1358,6 +1663,10 @@
             "type": "string",
             "format": "email"
           },
+          "password": {
+            "type": "string",
+            "format": "password"
+          },
           "businessPhoneNumber": {
             "type": "string"
           }
@@ -1370,6 +1679,53 @@
           "business"
         ],
         "title": "SignupType"
+      },
+      "RegistrationRequestSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "fullName",
+          "email",
+          "type",
+          "status",
+          "createdAt",
+          "documentId"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "reg-1"
+          },
+          "fullName": {
+            "type": "string",
+            "example": "Mario Rossi"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "mario@example.com"
+          },
+          "type": {
+            "$ref": "#/components/schemas/SignupType"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "approved",
+              "rejected"
+            ],
+            "example": "pending"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "documentId": {
+            "type": "string",
+            "example": "doc-pgna-1"
+          }
+        }
       }
     },
     "securitySchemes": {
