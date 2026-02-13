@@ -69,60 +69,6 @@
         }
       }
     },
-    "/login/refNT": {
-      "post": {
-        "tags": [
-          "auth"
-        ],
-        "summary": "Login RefNT",
-        "operationId": "login_refNT_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PgnaLoginIn"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/TokenResponse"
-          },
-          "401": {
-            "description": "Credenziali errate",
-            "content": {
-              "application/json": {
-                "example": {
-                  "detail": "Username o password errata"
-                }
-              }
-            }
-          },
-          "423": {
-            "description": "Password change required",
-            "content": {
-              "application/json": {
-                "example": {
-                  "detail": "Password change required"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Errore interno del server",
-            "content": {
-              "application/json": {
-                "example": {
-                  "detail": "Errore interno del server"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/login/verify": {
       "post": {
         "tags": [
@@ -255,7 +201,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "username": {
+                  "email": {
                     "type": "string",
                     "example": "user@example.com"
                   },
@@ -269,7 +215,7 @@
                   }
                 },
                 "required": [
-                  "username",
+                  "email",
                   "currentPassword",
                   "newPassword"
                 ]
@@ -1127,45 +1073,30 @@
       },
       "LoginIn": {
         "properties": {
-          "username": {
+          "email": {
             "type": "string",
-            "title": "Username"
+            "title": "Email"
           },
           "password": {
             "type": "string",
             "title": "Password"
+          },
+          "refNT": {
+            "type": "string",
+            "title": "RefNT"
           }
         },
         "type": "object",
         "required": [
-          "username",
           "password"
         ],
         "title": "LoginIn"
       },
-      "PgnaLoginIn": {
-        "properties": {
-          "refNT": {
-            "type": "string",
-            "title": "RefNT"
-          },
-          "password": {
-            "type": "string",
-            "title": "Password"
-          }
-        },
-        "type": "object",
-        "required": [
-          "refNT",
-          "password"
-        ],
-        "title": "PgnaLoginIn"
-      },
       "LoginOtpVerifyIn": {
         "properties": {
-          "username": {
+          "email": {
             "type": "string",
-            "title": "Username"
+            "title": "Email"
           },
           "otp": {
             "type": "string",
@@ -1579,7 +1510,8 @@
           "birthDate",
           "birthCity",
           "birthCountry",
-          "address"
+          "address",
+          "idDocument"
         ],
         "properties": {
           "type": {
@@ -1619,6 +1551,10 @@
           },
           "address": {
             "type": "string"
+          },
+          "idDocument": {
+            "type": "string",
+            "description": "Base64-encoded identity document PDF"
           }
         }
       },
@@ -1633,7 +1569,8 @@
           "legalRepresentativeId",
           "email",
           "password",
-          "businessPhoneNumber"
+          "businessPhoneNumber",
+          "idDocument"
         ],
         "properties": {
           "type": {
@@ -1669,6 +1606,10 @@
           },
           "businessPhoneNumber": {
             "type": "string"
+          },
+          "idDocument": {
+            "type": "string",
+            "description": "Base64-encoded identity document PDF"
           }
         }
       },
