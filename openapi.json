@@ -273,6 +273,18 @@
         ],
         "summary": "List Vehicles",
         "operationId": "list_vehicles_vehicles_get",
+        "parameters": [
+          {
+            "name": "owned",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "title": "Owned"
+            },
+            "description": "Filter by ownership: true for user's vehicles, false for catalog"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
