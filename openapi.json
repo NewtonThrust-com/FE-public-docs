@@ -315,6 +315,45 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Create Vehicle",
+        "operationId": "create_vehicle_vehicles_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVehicleIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Vehicle created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleSchema"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/vehicles/{vehicle_id}/images": {
@@ -1225,6 +1264,62 @@
           "base64"
         ],
         "title": "DocumentResponse"
+      },
+      "CreateVehicleIn": {
+        "properties": {
+          "brand": {
+            "type": "string",
+            "title": "Brand"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "fuel_type": {
+            "$ref": "#/components/schemas/FuelType"
+          },
+          "transmission": {
+            "$ref": "#/components/schemas/TransmissionType"
+          },
+          "b2c_price": {
+            "type": "number",
+            "title": "B2C Price"
+          },
+          "mileage": {
+            "type": "integer",
+            "title": "Mileage"
+          },
+          "registration_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Registration Date"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "brand",
+          "model",
+          "type",
+          "category",
+          "fuel_type",
+          "transmission",
+          "b2c_price",
+          "mileage",
+          "registration_date"
+        ],
+        "title": "CreateVehicleIn"
       },
       "CreateDealIn": {
         "properties": {
