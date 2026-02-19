@@ -301,12 +301,12 @@
                       "id": "1",
                       "brand": "Pagani",
                       "model": "Utopia",
-                      "b2c_price": 500000,
-                      "fuel_type": "Petrol",
+                      "price": 500000,
+                      "fuelType": "Petrol",
                       "transmission": "Automatic",
                       "type": "Sportiva",
                       "category": "Categoria A",
-                      "registration_date": "2019-12-15",
+                      "registrationDate": "2019-12-15",
                       "mileage": 10000
                     }
                   ]
@@ -356,7 +356,7 @@
         }
       }
     },
-    "/vehicles/{vehicle_id}/images": {
+    "/vehicles/{vehicleId}/images": {
       "get": {
         "tags": [
           "vehicles"
@@ -370,7 +370,7 @@
               "type": "integer",
               "title": "Vehicle Id"
             },
-            "name": "vehicle_id",
+            "name": "vehicleId",
             "in": "path"
           }
         ],
@@ -502,19 +502,15 @@
                 "schema": {
                   "type": "object",
                   "required": [
-                    "order_id"
+                    "orderId"
                   ],
                   "properties": {
-                    "order_id": {
-                      "$ref": "#/components/schemas/order_id"
+                    "orderId": {
+                      "$ref": "#/components/schemas/orderId"
                     },
                     "status": {
                       "type": "string",
                       "example": "confirmed"
-                    },
-                    "total_amount": {
-                      "type": "number",
-                      "example": 249.9
                     }
                   }
                 }
@@ -544,11 +540,11 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "order_id"
+                  "orderId"
                 ],
                 "properties": {
-                  "order_id": {
-                    "$ref": "#/components/schemas/order_id"
+                  "orderId": {
+                    "$ref": "#/components/schemas/orderId"
                   }
                 }
               }
@@ -610,7 +606,7 @@
                   "type": "object",
                   "required": [
                     "status",
-                    "customer_email"
+                    "customerEmail"
                   ],
                   "properties": {
                     "status": {
@@ -622,7 +618,7 @@
                         "complete"
                       ]
                     },
-                    "customer_email": {
+                    "customerEmail": {
                       "type": "string",
                       "example": "customer@example.com"
                     }
@@ -1072,7 +1068,7 @@
             "type": "string",
             "example": "Pacchetto Lusso"
           },
-          "ticket_type_id": {
+          "ticketTypeId": {
             "type": "string",
             "example": "Gold"
           },
@@ -1089,7 +1085,7 @@
         "required": [
           "id",
           "label",
-          "ticket_type_id",
+          "ticketTypeId",
           "price",
           "excludeOthers"
         ]
@@ -1161,21 +1157,7 @@
         ],
         "title": "LoginOtpVerifyIn"
       },
-      "PhotoType": {
-        "type": "string",
-        "enum": [
-          "Exterior",
-          "Interior",
-          "Engine",
-          "Dashboard",
-          "Trunk",
-          "Wheels",
-          "Other"
-        ],
-        "title": "PhotoType",
-        "description": "An enumeration."
-      },
-      "order_id": {
+      "orderId": {
         "type": "string",
         "example": "ORD-98765"
       },
@@ -1194,11 +1176,6 @@
           "access_token": {
             "type": "string",
             "title": "Access Token"
-          },
-          "token_type": {
-            "type": "string",
-            "title": "Token Type",
-            "default": "bearer"
           },
           "role": {
             "type": "string",
@@ -1283,21 +1260,21 @@
             "type": "string",
             "title": "Category"
           },
-          "fuel_type": {
+          "fuelType": {
             "$ref": "#/components/schemas/FuelType"
           },
           "transmission": {
             "$ref": "#/components/schemas/TransmissionType"
           },
-          "b2c_price": {
+          "price": {
             "type": "number",
-            "title": "B2C Price"
+            "title": "Price"
           },
           "mileage": {
             "type": "integer",
             "title": "Mileage"
           },
-          "registration_date": {
+          "registrationDate": {
             "type": "string",
             "format": "date",
             "title": "Registration Date"
@@ -1313,11 +1290,11 @@
           "model",
           "type",
           "category",
-          "fuel_type",
+          "fuelType",
           "transmission",
-          "b2c_price",
+          "price",
           "mileage",
-          "registration_date"
+          "registrationDate"
         ],
         "title": "CreateVehicleIn"
       },
@@ -1370,10 +1347,10 @@
           "dealType": {
             "type": "string",
             "title": "Deal Type",
-            "example": "acquisto",
+            "example": "buy",
             "enum": [
-              "vendita",
-              "acquisto"
+              "sell",
+              "buy"
             ]
           }
         },
@@ -1407,11 +1384,6 @@
           "access_token": {
             "type": "string",
             "title": "Access Token"
-          },
-          "token_type": {
-            "type": "string",
-            "title": "Token Type",
-            "default": "bearer"
           },
           "documentId": {
             "type": "string",
@@ -1459,16 +1431,6 @@
         ],
         "title": "ValidationError"
       },
-      "VatRegimeType": {
-        "type": "string",
-        "enum": [
-          "VatExposed",
-          "VatMargin",
-          "Exempt"
-        ],
-        "title": "VatRegimeType",
-        "description": "An enumeration."
-      },
       "VehicleImageOut": {
         "properties": {
           "id": {
@@ -1478,21 +1440,12 @@
           "url": {
             "type": "string",
             "title": "Url"
-          },
-          "photo_type": {
-            "$ref": "#/components/schemas/PhotoType"
-          },
-          "sort_order": {
-            "type": "integer",
-            "title": "Sort Order"
           }
         },
         "type": "object",
         "required": [
           "id",
-          "url",
-          "photo_type",
-          "sort_order"
+          "url"
         ],
         "title": "VehicleImageOut"
       },
@@ -1518,7 +1471,7 @@
             "type": "string",
             "title": "Model"
           },
-          "registration_date": {
+          "registrationDate": {
             "type": "string",
             "format": "date",
             "title": "Registration Date"
@@ -1535,11 +1488,7 @@
             "type": "integer",
             "title": "Power"
           },
-          "dealer_id": {
-            "type": "string",
-            "title": "Dealer Id"
-          },
-          "fuel_type": {
+          "fuelType": {
             "$ref": "#/components/schemas/FuelType"
           },
           "transmission": {
@@ -1548,24 +1497,9 @@
           "requester": {
             "$ref": "#/components/schemas/RequesterType"
           },
-          "vat_regime": {
-            "$ref": "#/components/schemas/VatRegimeType"
-          },
-          "b2c_margin_range_min": {
+          "price": {
             "type": "number",
-            "title": "B2C Margin Range Min"
-          },
-          "b2c_margin_range_max": {
-            "type": "number",
-            "title": "B2C Margin Range Max"
-          },
-          "b2b_price": {
-            "type": "number",
-            "title": "B2B Price"
-          },
-          "b2c_price": {
-            "type": "number",
-            "title": "B2C Price"
+            "title": "Price"
           },
           "description": {
             "type": "string",
@@ -1574,14 +1508,14 @@
         },
         "type": "object",
         "required": [
-          "b2c_price",
+          "price",
           "brand",
           "category",
-          "fuel_type",
+          "fuelType",
           "id",
           "mileage",
           "model",
-          "registration_date",
+          "registrationDate",
           "transmission",
           "type"
         ],
