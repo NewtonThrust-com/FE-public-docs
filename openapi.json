@@ -1400,6 +1400,11 @@
               "sell",
               "buy"
             ]
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "example": "In attesa di firma"
           }
         },
         "type": "object",
@@ -1783,6 +1788,11 @@
             "type": "object",
             "additionalProperties": {},
             "description": "All form data submitted during signup (varies by person/business type)"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "example": "In attesa di revisione"
           }
         }
       }
