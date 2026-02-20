@@ -400,6 +400,54 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Upload Vehicle Image",
+        "operationId": "uploadVehicleImage",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Vehicle Id"
+            },
+            "name": "vehicleId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadVehicleImageIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Image uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleImageOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
       }
     },
     "/orders/create": {
@@ -1431,6 +1479,19 @@
         ],
         "title": "ValidationError"
       },
+      "UploadVehicleImageIn": {
+        "type": "object",
+        "required": [
+          "base64"
+        ],
+        "properties": {
+          "base64": {
+            "type": "string",
+            "description": "Base64-encoded image data"
+          }
+        },
+        "title": "UploadVehicleImageIn"
+      },
       "VehicleImageOut": {
         "properties": {
           "id": {
@@ -1717,6 +1778,11 @@
           "documentId": {
             "type": "string",
             "example": "doc-pgna-1"
+          },
+          "signupData": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "All form data submitted during signup (varies by person/business type)"
           }
         }
       }
