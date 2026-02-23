@@ -356,6 +356,32 @@
         }
       }
     },
+    "/vehicles/form-schema": {
+      "get": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Get Vehicle Form Schema",
+        "operationId": "get_vehicle_form_schema",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleFormSchemaResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/vehicles/{vehicleId}/images": {
       "get": {
         "tags": [
@@ -1378,14 +1404,27 @@
             "example": "123"
           },
           "status": {
-            "type": "string",
+            "type": "object",
             "title": "Status",
-            "example": "pending",
-            "enum": [
-              "pending",
-              "signed",
-              "completed"
-            ]
+            "required": [
+              "value",
+              "label"
+            ],
+            "properties": {
+              "value": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "signed",
+                  "completed"
+                ],
+                "example": "pending"
+              },
+              "label": {
+                "type": "string",
+                "example": "In attesa di firma"
+              }
+            }
           },
           "createdAt": {
             "type": "string",
@@ -1400,11 +1439,6 @@
               "sell",
               "buy"
             ]
-          },
-          "label": {
-            "type": "string",
-            "title": "Label",
-            "example": "In attesa di firma"
           }
         },
         "type": "object",
@@ -1514,6 +1548,26 @@
           "url"
         ],
         "title": "VehicleImageOut"
+      },
+      "VehicleFormSchemaResponse": {
+        "type": "object",
+        "required": [
+          "schema",
+          "uiSchema"
+        ],
+        "properties": {
+          "schema": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "JSON Schema for the vehicle form"
+          },
+          "uiSchema": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "RJSF UI Schema for the vehicle form"
+          }
+        },
+        "title": "VehicleFormSchemaResponse"
       },
       "VehicleSchema": {
         "properties": {
@@ -1768,13 +1822,27 @@
             "$ref": "#/components/schemas/SignupType"
           },
           "status": {
-            "type": "string",
-            "enum": [
-              "pending",
-              "approved",
-              "rejected"
+            "type": "object",
+            "title": "Status",
+            "required": [
+              "value",
+              "label"
             ],
-            "example": "pending"
+            "properties": {
+              "value": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "approved",
+                  "rejected"
+                ],
+                "example": "pending"
+              },
+              "label": {
+                "type": "string",
+                "example": "In attesa di revisione"
+              }
+            }
           },
           "createdAt": {
             "type": "string",
@@ -1788,11 +1856,6 @@
             "type": "object",
             "additionalProperties": {},
             "description": "All form data submitted during signup (varies by person/business type)"
-          },
-          "label": {
-            "type": "string",
-            "title": "Label",
-            "example": "In attesa di revisione"
           }
         }
       }
