@@ -356,20 +356,20 @@
         }
       }
     },
-    "/vehicles/form-schema": {
+    "/vehicles/select-options": {
       "get": {
         "tags": [
           "vehicles"
         ],
-        "summary": "Get Vehicle Form Schema",
-        "operationId": "get_vehicle_form_schema",
+        "summary": "Get Vehicle Select Options",
+        "operationId": "get_vehicle_select_options",
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/VehicleFormSchemaResponse"
+                  "$ref": "#/components/schemas/VehicleSelectOptionsResponse"
                 }
               }
             }
@@ -1549,25 +1549,47 @@
         ],
         "title": "VehicleImageOut"
       },
-      "VehicleFormSchemaResponse": {
+      "SelectFieldOptions": {
         "type": "object",
         "required": [
-          "schema",
-          "uiSchema"
+          "values",
+          "labels"
         ],
         "properties": {
-          "schema": {
-            "type": "object",
-            "additionalProperties": true,
-            "description": "JSON Schema for the vehicle form"
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Enum values for the select field"
           },
-          "uiSchema": {
-            "type": "object",
-            "additionalProperties": true,
-            "description": "RJSF UI Schema for the vehicle form"
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Display labels for the select field"
           }
         },
-        "title": "VehicleFormSchemaResponse"
+        "title": "SelectFieldOptions"
+      },
+      "VehicleSelectOptionsResponse": {
+        "type": "object",
+        "required": [
+          "fuelType",
+          "transmission"
+        ],
+        "properties": {
+          "fuelType": {
+            "$ref": "#/components/schemas/SelectFieldOptions",
+            "description": "Options for the fuel type select"
+          },
+          "transmission": {
+            "$ref": "#/components/schemas/SelectFieldOptions",
+            "description": "Options for the transmission select"
+          }
+        },
+        "title": "VehicleSelectOptionsResponse"
       },
       "VehicleSchema": {
         "properties": {
