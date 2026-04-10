@@ -547,6 +547,59 @@
         }
       }
     },
+    "/vehicles/{vehicleId}/publish": {
+      "post": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Publish Vehicle",
+        "operationId": "publishVehicle",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Vehicle Id"
+            },
+            "name": "vehicleId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vehicle published successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublishVehicleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Vehicle not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/vehicles/{vehicleId}/images/{imageId}": {
       "get": {
         "tags": [
@@ -595,6 +648,60 @@
           },
           "404": {
             "description": "Image not found"
+          }
+        }
+      }
+    },
+    "/vehicles/{vehicleId}/offer": {
+      "post": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Make Offer",
+        "description": "Buyer makes an offer on a listed vehicle, starting a deal. The BE creates the deal and generates the POIF document.",
+        "operationId": "offerVehicle",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "vehicleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The vehicle ID to make an offer on"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Offer submitted, POIF document generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferVehicleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Vehicle not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
           }
         }
       }
@@ -1071,6 +1178,158 @@
         }
       }
     },
+    "/deals/{id}/complete": {
+      "post": {
+        "tags": [
+          "deals"
+        ],
+        "summary": "Complete Deal",
+        "description": "Buyer completes the purchase. The BE generates the OPEF document preview.",
+        "operationId": "completeDeal",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The deal ID to complete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Purchase completed, OPEF document preview generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompleteDealResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Deal not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deals/{id}/accept": {
+      "post": {
+        "tags": [
+          "deals"
+        ],
+        "summary": "Accept Deal",
+        "description": "Seller accepts the deal. The BE generates the CLOP document preview.",
+        "operationId": "acceptDeal",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The deal ID to accept"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deal accepted, CLOP document preview generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptDealResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Deal not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deals/{id}/reject": {
+      "put": {
+        "tags": [
+          "deals"
+        ],
+        "summary": "Reject Deal",
+        "description": "Seller rejects the deal. Sets status to rejected_by_seller.",
+        "operationId": "rejectDeal",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The deal ID to reject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deal rejected successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DealSchema"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Deal not found"
+          }
+        }
+      }
+    },
     "/docs/{id}": {
       "get": {
         "tags": [
@@ -1185,6 +1444,86 @@
           },
           "404": {
             "description": "Document not found"
+          }
+        }
+      }
+    },
+    "/admin/vehicles": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Admin Vehicles",
+        "description": "Returns all vehicles pending admin approval",
+        "operationId": "listAdminVehicles",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VehicleSchema"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/admin/vehicles/{id}/approve": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Approve Vehicle",
+        "description": "Approve a vehicle pending admin review",
+        "operationId": "approveVehicle",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The vehicle ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vehicle approved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Vehicle approved"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Vehicle not found"
           }
         }
       }
@@ -1332,6 +1671,59 @@
           }
         }
       }
+    },
+    "/admin/deals/{id}/approve": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Approve Deal",
+        "description": "Generate CLOP document for a deal in wait_for_admin state, moving it to confirmed_by_admin",
+        "operationId": "approveDeal",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The deal ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CLOP generated and deal confirmed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "documentId"
+                  ],
+                  "properties": {
+                    "documentId": {
+                      "type": "string",
+                      "example": "clop-doc-deal-1"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Deal not found"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1434,10 +1826,6 @@
       },
       "LoginOtpVerifyIn": {
         "properties": {
-          "email": {
-            "type": "string",
-            "title": "Email"
-          },
           "otp": {
             "type": "string",
             "title": "Otp"
@@ -1632,15 +2020,18 @@
               "value": {
                 "type": "string",
                 "enum": [
-                  "pending",
-                  "signed",
-                  "completed"
+                  "new",
+                  "wait_for_admin",
+                  "confirmed_by_admin",
+                  "confirmed_by_seller",
+                  "confirmed_by_buyer",
+                  "rejected_by_seller"
                 ],
-                "example": "pending"
+                "example": "new"
               },
               "label": {
                 "type": "string",
-                "example": "In attesa di firma"
+                "example": "Nuova"
               }
             }
           },
@@ -1657,6 +2048,68 @@
               "sell",
               "buy"
             ]
+          },
+          "vehicle": {
+            "type": "object",
+            "title": "Vehicle",
+            "required": [
+              "brand",
+              "model"
+            ],
+            "properties": {
+              "brand": {
+                "type": "string",
+                "example": "Pagani"
+              },
+              "model": {
+                "type": "string",
+                "example": "Utopia"
+              }
+            }
+          },
+          "buyer": {
+            "type": "object",
+            "title": "Buyer",
+            "required": [
+              "id",
+              "fullName",
+              "email"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "fullName": {
+                "type": "string",
+                "example": "Mario Rossi"
+              },
+              "email": {
+                "type": "string",
+                "example": "mario.rossi@example.com"
+              }
+            }
+          },
+          "seller": {
+            "type": "object",
+            "title": "Seller",
+            "required": [
+              "id",
+              "fullName",
+              "email"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "fullName": {
+                "type": "string",
+                "example": "Luigi Verdi"
+              },
+              "email": {
+                "type": "string",
+                "example": "luigi.verdi@example.com"
+              }
+            }
           }
         },
         "type": "object",
@@ -1669,6 +2122,20 @@
           "dealType"
         ],
         "title": "DealSchema"
+      },
+      "PublishVehicleResponse": {
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "title": "Document Id",
+            "example": "loaf-doc-123"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documentId"
+        ],
+        "title": "PublishVehicleResponse"
       },
       "CreateDealResponse": {
         "properties": {
@@ -1683,6 +2150,34 @@
           "documentId"
         ],
         "title": "CreateDealResponse"
+      },
+      "OfferVehicleResponse": {
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "title": "Document Id",
+            "example": "doc-poif-vehicle-1"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documentId"
+        ],
+        "title": "OfferVehicleResponse"
+      },
+      "AcceptDealResponse": {
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "title": "Document Id",
+            "example": "doc-clop-deal-1"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documentId"
+        ],
+        "title": "AcceptDealResponse"
       },
       "SignupResponse": {
         "properties": {
@@ -1927,6 +2422,29 @@
           "description": {
             "type": "string",
             "title": "Description"
+          },
+          "vehicleStatus": {
+            "type": "object",
+            "title": "Vehicle Status",
+            "required": [
+              "value",
+              "label"
+            ],
+            "properties": {
+              "value": {
+                "type": "string",
+                "enum": [
+                  "new",
+                  "wait_for_admin",
+                  "confirmed_by_admin",
+                  "locked",
+                  "sold"
+                ]
+              },
+              "label": {
+                "type": "string"
+              }
+            }
           }
         },
         "type": "object",
@@ -1940,7 +2458,8 @@
           "model",
           "registrationDate",
           "transmission",
-          "type"
+          "type",
+          "vehicleStatus"
         ],
         "title": "VehicleSchema"
       },
@@ -1980,7 +2499,7 @@
           "email",
           "password",
           "phoneNumber",
-          "tin",
+          "fiscalCode",
           "idDocumentNumber",
           "birthDate",
           "birthCity",
@@ -2011,7 +2530,7 @@
           "phoneNumber": {
             "type": "string"
           },
-          "tin": {
+          "fiscalCode": {
             "type": "string",
             "description": "Tax Identification Number"
           },
@@ -2038,9 +2557,10 @@
         "type": "object",
         "required": [
           "type",
+          "fullName",
+          "vatNumber",
           "businessName",
           "registeredOffice",
-          "tin",
           "legalRepresentativeName",
           "legalRepresentativeId",
           "email",
@@ -2052,17 +2572,21 @@
           "type": {
             "$ref": "#/components/schemas/SignupType",
             "enum": [
-              "business"
+              "company"
             ],
-            "default": "business"
+            "default": "company"
+          },
+          "fullName": {
+            "type": "string",
+            "example": "Mario Rossi"
+          },
+          "vatNumber": {
+            "type": "string",
+            "example": "09951550012"
           },
           "businessName": {
             "type": "string",
             "example": "Tech S.r.l."
-          },
-          "tin": {
-            "type": "string",
-            "description": "Tax Identification Number"
           },
           "registeredOffice": {
             "type": "string"
@@ -2094,7 +2618,7 @@
         "type": "string",
         "enum": [
           "person",
-          "business",
+          "company",
           "legalPerson"
         ],
         "title": "SignupType"
@@ -2107,7 +2631,10 @@
           "email",
           "password",
           "phoneNumber",
-          "tin",
+          "vatNumber",
+          "businessName",
+          "legalRepresentativeName",
+          "legalRepresentativeId",
           "idDocumentNumber",
           "birthDate",
           "birthCity",
@@ -2138,9 +2665,21 @@
           "phoneNumber": {
             "type": "string"
           },
-          "tin": {
+          "vatNumber": {
             "type": "string",
             "description": "Tax Identification Number"
+          },
+          "businessName": {
+            "type": "string"
+          },
+          "legalRepresentativeName": {
+            "type": "string"
+          },
+          "legalRepresentativeId": {
+            "type": "string"
+          },
+          "idDocumentNumber": {
+            "type": "string"
           },
           "birthDate": {
             "type": "string",
@@ -2226,6 +2765,20 @@
             "description": "All form data submitted during signup (varies by person/business type)"
           }
         }
+      },
+      "CompleteDealResponse": {
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "title": "Document Id",
+            "example": "doc-opef-deal-1"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documentId"
+        ],
+        "title": "CompleteDealResponse"
       }
     },
     "securitySchemes": {
