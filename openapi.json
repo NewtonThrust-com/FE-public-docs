@@ -133,6 +133,46 @@
             "description": "No Content"
           }
         }
+      },
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Request OTP",
+        "operationId": "requestOtp",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "context": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "context"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP sent"
+          },
+          "404": {
+            "description": "Email not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
       }
     },
     "/signup": {
@@ -141,7 +181,7 @@
           "auth"
         ],
         "summary": "Signup",
-        "description": "Registrazione per Persone Fisiche o Aziende (Business)",
+        "description": "Registrazione per Persone Fisiche, Persone Legali o Aziende (Business)",
         "operationId": "signup",
         "requestBody": {
           "content": {
@@ -153,6 +193,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/BusinessSignupIn"
+                  },
+                  {
+                    "$ref": "#/components/schemas/LegalPersonSignupIn"
                   },
                   {
                     "$ref": "#/components/schemas/UserSignupIn"
@@ -187,14 +230,18 @@
         }
       }
     },
-    "/change-password": {
+    "/login/change-password": {
       "post": {
         "tags": [
           "auth"
         ],
         "summary": "Change user password",
-        "description": "Allows a user to change password by providing the current password.",
         "operationId": "changePassword",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -202,21 +249,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "user@example.com"
-                  },
                   "currentPassword": {
-                    "type": "string",
-                    "example": "OldPassword123!"
+                    "type": "string"
                   },
                   "newPassword": {
-                    "type": "string",
-                    "example": "NewPassword456!"
+                    "type": "string"
                   }
                 },
                 "required": [
-                  "email",
                   "currentPassword",
                   "newPassword"
                 ]
@@ -229,36 +269,53 @@
             "$ref": "#/components/responses/TokenResponse"
           },
           "401": {
-            "description": "Invalid credentials",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "detail": {
-                      "type": "string",
-                      "example": "Username o password errata"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Invalid credentials"
           },
-          "423": {
-            "description": "Password change required",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "detail": {
-                      "type": "string",
-                      "example": "Password change required"
-                    }
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/login/reset-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Reset password via OTP",
+        "operationId": "resetPassword",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "otp": {
+                    "type": "string"
+                  },
+                  "newPassword": {
+                    "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "email",
+                  "otp",
+                  "newPassword"
+                ]
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TokenResponse"
+          },
+          "401": {
+            "description": "Invalid OTP"
           },
           "500": {
             "description": "Server error"
@@ -382,6 +439,166 @@
         ]
       }
     },
+    "/vehicles/{vehicleId}": {
+      "delete": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Delete Vehicle",
+        "operationId": "deleteVehicle",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Vehicle Id",
+              "description": "The ID of the vehicle to delete"
+            },
+            "name": "vehicleId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Vehicle deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Vehicle not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Update Vehicle",
+        "operationId": "updateVehicle",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Vehicle Id"
+            },
+            "name": "vehicleId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVehicleIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vehicle updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleSchema"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Vehicle not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vehicles/{vehicleId}/images/{imageId}": {
+      "get": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Get Vehicle Image",
+        "operationId": "getVehicleImage",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Vehicle Id"
+            },
+            "name": "vehicleId",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Image Id"
+            },
+            "name": "imageId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleImageOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Image not found"
+          }
+        }
+      }
+    },
     "/vehicles/{vehicleId}/images": {
       "get": {
         "tags": [
@@ -393,7 +610,7 @@
           {
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Vehicle Id"
             },
             "name": "vehicleId",
@@ -442,8 +659,9 @@
           {
             "required": true,
             "schema": {
-              "type": "integer",
-              "title": "Vehicle Id"
+              "type": "string",
+              "title": "Vehicle Id",
+              "description": "The ID of the vehicle"
             },
             "name": "vehicleId",
             "in": "path"
@@ -1549,29 +1767,23 @@
         ],
         "title": "VehicleImageOut"
       },
-      "SelectFieldOptions": {
+      "SelectOption": {
         "type": "object",
         "required": [
-          "values",
-          "labels"
+          "value",
+          "label"
         ],
         "properties": {
-          "values": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Enum values for the select field"
+          "value": {
+            "type": "string",
+            "description": "Valore da salvare nel DB (in inglese)"
           },
-          "labels": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Display labels for the select field"
+          "label": {
+            "type": "string",
+            "description": "Etichetta localizzata da mostrare nell'UI"
           }
         },
-        "title": "SelectFieldOptions"
+        "title": "SelectOption"
       },
       "VehicleSelectOptionsResponse": {
         "type": "object",
@@ -1581,15 +1793,84 @@
         ],
         "properties": {
           "fuelType": {
-            "$ref": "#/components/schemas/SelectFieldOptions",
-            "description": "Options for the fuel type select"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SelectOption"
+            },
+            "description": "Opzioni per il tipo di carburante"
           },
           "transmission": {
-            "$ref": "#/components/schemas/SelectFieldOptions",
-            "description": "Options for the transmission select"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SelectOption"
+            },
+            "description": "Opzioni per il tipo di trasmissione"
           }
         },
         "title": "VehicleSelectOptionsResponse"
+      },
+      "UpdateVehicleIn": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "title": "Created At"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "title": "Updated At"
+          },
+          "brand": {
+            "type": "string",
+            "title": "Brand"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "fuelType": {
+            "type": "string",
+            "title": "Fuel Type"
+          },
+          "transmission": {
+            "type": "string",
+            "title": "Transmission"
+          },
+          "price": {
+            "type": "number",
+            "title": "Price"
+          },
+          "mileage": {
+            "type": "integer",
+            "title": "Mileage"
+          },
+          "registrationDate": {
+            "type": "string",
+            "format": "date",
+            "title": "Registration Date"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "title": "UpdateVehicleIn"
       },
       "VehicleSchema": {
         "properties": {
@@ -1699,7 +1980,7 @@
           "email",
           "password",
           "phoneNumber",
-          "fiscalCode",
+          "tin",
           "idDocumentNumber",
           "birthDate",
           "birthCity",
@@ -1730,8 +2011,9 @@
           "phoneNumber": {
             "type": "string"
           },
-          "fiscalCode": {
-            "type": "string"
+          "tin": {
+            "type": "string",
+            "description": "Tax Identification Number"
           },
           "birthDate": {
             "type": "string",
@@ -1758,7 +2040,7 @@
           "type",
           "businessName",
           "registeredOffice",
-          "vatNumber",
+          "tin",
           "legalRepresentativeName",
           "legalRepresentativeId",
           "email",
@@ -1778,8 +2060,9 @@
             "type": "string",
             "example": "Tech S.r.l."
           },
-          "vatNumber": {
-            "type": "string"
+          "tin": {
+            "type": "string",
+            "description": "Tax Identification Number"
           },
           "registeredOffice": {
             "type": "string"
@@ -1811,9 +2094,72 @@
         "type": "string",
         "enum": [
           "person",
-          "business"
+          "business",
+          "legalPerson"
         ],
         "title": "SignupType"
+      },
+      "LegalPersonSignupIn": {
+        "type": "object",
+        "required": [
+          "type",
+          "fullName",
+          "email",
+          "password",
+          "phoneNumber",
+          "tin",
+          "idDocumentNumber",
+          "birthDate",
+          "birthCity",
+          "birthCountry",
+          "address",
+          "idDocument"
+        ],
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/SignupType",
+            "enum": [
+              "legalPerson"
+            ],
+            "default": "legalPerson"
+          },
+          "fullName": {
+            "type": "string",
+            "example": "John Smith"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "tin": {
+            "type": "string",
+            "description": "Tax Identification Number"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "birthCity": {
+            "type": "string"
+          },
+          "birthCountry": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "idDocument": {
+            "type": "string",
+            "description": "Base64-encoded identity document PDF"
+          }
+        }
       },
       "RegistrationRequestSchema": {
         "type": "object",
