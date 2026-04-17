@@ -116,6 +116,48 @@
         }
       }
     },
+    "/login/refresh": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Refresh access token",
+        "description": "Scambia un refresh_token valido per una nuova coppia access_token/refresh_token (rotation).",
+        "operationId": "loginRefresh",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRefreshIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Refresh token non valido o scaduto",
+            "content": {
+              "application/json": {
+                "example": {
+                  "detail": "Invalid refresh token"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/otp": {
       "get": {
         "tags": [
@@ -1900,6 +1942,20 @@
             "type": "string",
             "title": "Access Token"
           },
+          "refresh_token": {
+            "type": "string",
+            "title": "Refresh Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "example": "bearer"
+          },
+          "expires_in": {
+            "type": "integer",
+            "title": "Expires In",
+            "description": "Access token lifetime in seconds"
+          },
           "role": {
             "type": "string",
             "title": "Role"
@@ -1910,6 +1966,19 @@
           "access_token"
         ],
         "title": "TokenResponse"
+      },
+      "LoginRefreshIn": {
+        "properties": {
+          "refresh_token": {
+            "type": "string",
+            "title": "Refresh Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "refresh_token"
+        ],
+        "title": "LoginRefreshIn"
       },
       "TransmissionType": {
         "type": "string",
