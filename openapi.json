@@ -1211,10 +1211,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DealSchema"
-                  }
+                  "$ref": "#/components/schemas/DealsListResponse"
                 }
               }
             }
@@ -1632,10 +1629,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RegistrationRequestSchema"
-                  }
+                  "$ref": "#/components/schemas/AdminRegistrationsListResponse"
                 }
               }
             }
@@ -1753,6 +1747,36 @@
           },
           "404": {
             "description": "Registration not found"
+          }
+        }
+      }
+    },
+    "/admin/deals": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List All Deals",
+        "description": "Returns all deals for admin review",
+        "operationId": "listAdminDeals",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DealsListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -2731,7 +2755,8 @@
         "enum": [
           "person",
           "company",
-          "legalPerson"
+          "legalPerson",
+          "unknown"
         ],
         "title": "SignupType"
       },
@@ -2815,34 +2840,71 @@
       "RegistrationRequestSchema": {
         "type": "object",
         "required": [
-          "id",
-          "fullName",
+          "userId",
+          "userCode",
           "email",
-          "type",
-          "status",
-          "createdAt",
-          "documentId"
+          "username",
+          "userType",
+          "displayName",
+          "emailVerified",
+          "active",
+          "registrationStatus",
+          "createdAt"
         ],
         "properties": {
-          "id": {
+          "documentId": {
             "type": "string",
-            "example": "reg-1"
+            "nullable": true,
+            "example": "doc-reg-12345"
           },
-          "fullName": {
+          "userId": {
             "type": "string",
-            "example": "Mario Rossi"
+            "example": "74001ae4-2923-4aa4-8b4e-f306ce714191"
+          },
+          "userCode": {
+            "type": "string",
+            "example": "REFNT-AAASEF33-IT63555HH-2E90A323"
           },
           "email": {
             "type": "string",
             "format": "email",
             "example": "mario@example.com"
           },
-          "type": {
+          "username": {
+            "type": "string",
+            "example": "Mario Rossi"
+          },
+          "userType": {
             "$ref": "#/components/schemas/SignupType"
           },
-          "status": {
+          "displayName": {
+            "type": "string",
+            "example": "Mario Rossi Mario Rossi"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true,
+            "example": "+393001234567"
+          },
+          "fiscalCode": {
+            "type": "string",
+            "nullable": true,
+            "example": "RSSMRA80A01H501Z"
+          },
+          "taxIdentificationNumber": {
+            "type": "string",
+            "nullable": true,
+            "example": null
+          },
+          "emailVerified": {
+            "type": "boolean"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "registrationStatus": {
             "type": "object",
-            "title": "Status",
+            "title": "RegistrationStatus",
             "required": [
               "value",
               "label"
@@ -2859,24 +2921,67 @@
               },
               "label": {
                 "type": "string",
-                "example": "In attesa di revisione"
+                "example": "In attesa di approvazione"
               }
             }
+          },
+          "registrationRejectionReason": {
+            "type": "string",
+            "nullable": true,
+            "example": null
           },
           "createdAt": {
             "type": "string",
             "format": "date-time"
-          },
-          "documentId": {
-            "type": "string",
-            "example": "doc-pgna-1"
-          },
-          "signupData": {
-            "type": "object",
-            "additionalProperties": {},
-            "description": "All form data submitted during signup (varies by person/business type)"
           }
         }
+      },
+      "DealsListResponse": {
+        "type": "object",
+        "required": [
+          "deals",
+          "totalCount",
+          "page",
+          "pageSize"
+        ],
+        "properties": {
+          "deals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DealSchema"
+            }
+          },
+          "totalCount": {
+            "type": "integer"
+          },
+          "page": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          }
+        },
+        "title": "DealsListResponse"
+      },
+      "AdminRegistrationsListResponse": {
+        "type": "object",
+        "required": [
+          "registrations",
+          "totalCount"
+        ],
+        "properties": {
+          "registrations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegistrationRequestSchema"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "example": 10
+          }
+        },
+        "title": "AdminRegistrationsListResponse"
       },
       "CompleteDealResponse": {
         "properties": {
